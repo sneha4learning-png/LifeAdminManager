@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Set default axios base URL
-  // axios.defaults.baseURL set to window.location.origin by default in browser
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
