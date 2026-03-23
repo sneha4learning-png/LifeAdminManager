@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-primary: #0062FF;
+    --brand-hover: #0052D1;
+    --brand-light: #EBF5FF;
+    --brand-accent: #7C3AED;
+    
+    --neutral-bg: #F8F9FA;
+    --neutral-card: #FFFFFF;
+    --neutral-border: #F1F3F4;
+    --neutral-primary: #111111;
+    --neutral-secondary: #5F6368;
+  }
+
+  .dark {
+    --neutral-bg: #09090B;
+    --neutral-card: #111111;
+    --neutral-border: #27272A;
+    --neutral-primary: #FAFAFA;
+    --neutral-secondary: #A1A1AA;
+  }
+
+  body {
+    @apply bg-neutral-bg text-neutral-primary font-sans antialiased transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98];
+  }
+  
+  .btn-primary {
+    @apply bg-brand-primary text-white hover:bg-brand-hover shadow-soft-md hover:shadow-soft-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent text-neutral-primary border border-neutral-border hover:bg-black/5 dark:hover:bg-white/5;
+  }
+  
+  .btn-danger {
+    @apply bg-danger-text text-white hover:opacity-90 shadow-soft-md hover:shadow-soft-lg;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-neutral-card rounded-xl border border-neutral-border shadow-soft-md hover:shadow-soft-lg transition-all duration-200;
+  }
+
+  /* Form Elements */
+  .input-field {
+    @apply bg-neutral-card border border-neutral-border rounded-lg px-4 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all text-neutral-primary;
+  }
+  .input-field::placeholder {
+    @apply text-neutral-secondary opacity-50;
+  }
+
+  /* Status Indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+  
+  .status-success { @apply bg-success-text; }
+  .status-warning { @apply bg-warning-text; }
+  .status-danger { @apply bg-danger-text; }
+
+  /* Typography */
+  .heading-xl { @apply text-2xl font-bold tracking-tight text-neutral-primary; }
+  .heading-lg { @apply text-xl font-bold tracking-tight text-neutral-primary; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full transition-colors;
+  background-color: var(--neutral-secondary);
+}
+/* Let's just use hex or fixed colors for scrollbar for now as it's a small detail */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.2);
+  @apply rounded-full;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.2);
+}
+
+/* Glass effect utilities */
+.glass {
+  background-color: var(--neutral-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @apply border-b border-neutral-border opacity-70;
+}
+

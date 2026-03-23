@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "69bd457cd6b003dfe798af23",
+    "userId": "507f1f77bcf86cd799439011",
+    "name": "passport",
+    "category": "ID",
+    "expiryDate": "2026-03-20",
+    "reminderDaysBefore": "1",
+    "notes": "test",
+    "status": "Upcoming",
+    "createdAt": "2026-03-20T13:02:52.975Z"
+  },
+  {
+    "_id": "69bd496630123958e8a77844",
+    "userId": "28d4ca5b6443a5d6ca4550ef",
+    "name": "Finance",
+    "category": "Finance",
+    "expiryDate": "2026-03-20",
+    "reminderDaysBefore": "1",
+    "notes": "test",
+    "status": "Overdue",
+    "createdAt": "2026-03-20T13:19:34.790Z"
+  }
+]

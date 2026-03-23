@@ -1,0 +1,35 @@
+name: Firebase Deploy CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (Client)
+        run: |
+          cd client
+          npm install
+
+      - name: Build (Client)
+        run: |
+          cd client
+          npm run build
+
+      - name: Install dependencies (Server)
+        run: |
+          cd server
+          npm install
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}

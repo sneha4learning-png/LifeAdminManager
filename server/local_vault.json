@@ -1,0 +1,23 @@
+{
+  "users": {
+    "sneha4learning@gmail.com": {
+      "_id": "1774246345122",
+      "name": "sneha4learning",
+      "email": "sneha4learning@gmail.com",
+      "password": "1234sn"
+    }
+  },
+  "documents": [
+    {
+      "name": "passport",
+      "category": "ID",
+      "expiryDate": "2026-03-23",
+      "reminderDaysBefore": "1",
+      "notes": "",
+      "_id": "1774248785527",
+      "userId": "1774246345122",
+      "status": "Overdue",
+      "createdAt": "2026-03-23T06:53:05.527Z"
+    }
+  ]
+}
