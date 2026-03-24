@@ -9,12 +9,23 @@ const sendMail = async ({ to, subject, html }) => {
   try {
     // SOLUTION A: Resend API (Priority if API Key is present)
     if (process.env.RESEND_API_KEY) {
-      console.log('[Life Admin Manager] Attempting dispatch via Resend API...');
+      console.log('[Life Admin Project] Attempting dispatch via Resend API...');
       const response = await axios.post('https://api.resend.com/emails', {
-        from: `Life Admin Manager <onboarding@resend.dev>`,
+        from: `Life Admin Project <onboarding@resend.dev>`,
         to: [to],
         subject: subject,
         html: html,
+        // Disable click tracking to avoid the Chrome "Privacy Error"
+        tracking_settings: {
+          click: {
+            enable: false
+          }
+        },
+        // Prevent Gmail from "clipping" content by making every email unique
+        headers: {
+          'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+          'List-Unsubscribe': `<mailto:unsubscribe@life-admin-manager.com>`
+        }
       }, {
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` }
       });
