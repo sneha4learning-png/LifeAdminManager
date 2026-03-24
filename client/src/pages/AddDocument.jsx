@@ -123,10 +123,12 @@ const AddDocument = () => {
                 <div className="flex items-center gap-4">
                    <input 
                     type="number"
+                    min="1"
                     defaultValue={7}
                     {...register('reminderDaysBefore', { 
                       required: 'Required', 
-                      min: { value: 1, message: 'Minimum 1 day' } 
+                      min: { value: 1, message: 'Minimum 1 day' },
+                      valueAsNumber: true
                     })}
                     className={cn(
                         "w-20 px-4 py-2.5 rounded-lg bg-brand-light dark:bg-brand-primary/10 border border-brand-primary/20 text-lg font-bold text-brand-primary text-center outline-none focus:ring-2 focus:ring-brand-primary/20",

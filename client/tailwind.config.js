@@ -9,10 +9,10 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#0062FF',  // More premium blue
-          hover: '#0052D1',
-          light: '#EBF5FF',
-          accent: '#7C3AED',
+          primary: '#14B8A6',
+          hover: '#0D9488',
+          light: '#F0FDFA',
+          accent: '#F43F5E',
         },
         neutral: {
           bg: 'var(--neutral-bg)',
