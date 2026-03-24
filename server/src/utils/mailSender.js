@@ -15,10 +15,14 @@ const sendMail = async ({ to, subject, html }) => {
         to: [to],
         subject: subject,
         html: html,
-        // Correct API spec to disable click tracking
+        // Exact API spec to disable click tracking (Requires "enabled" with a 'd')
         tracking_settings: {
-          click: false,
-          open: false
+          click: {
+            enabled: false
+          },
+          open: {
+            enabled: false
+          }
         },
         // Force-disable tracking via headers as a secondary safeguard
         headers: {

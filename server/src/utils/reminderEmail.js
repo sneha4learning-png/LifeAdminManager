@@ -68,6 +68,10 @@ const sendReminderEmail = async (userEmail, document, userName = 'Valued Member'
               <tr>
                 <td align="center">
                   <a href="${dashboardLink}" style="background-color: #14B8A6; color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 10px; font-weight: 700; font-size: 16px; display: inline-block;">Access Secure Vault</a>
+                  <p style="margin-top: 20px; font-size: 11px; color: #94a3b8;">
+                    If the button doesn't work, copy-paste this URL:<br/>
+                    <a href="${dashboardLink}" style="color: #14B8A6;">${dashboardLink}</a>
+                  </p>
                 </td>
               </tr>
             </table>
