@@ -13,6 +13,7 @@ import AddDocument from './pages/AddDocument';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Settings from './pages/Settings';
+import Tasks from './pages/Tasks';
 
 function App() {
   return (
@@ -33,6 +34,14 @@ function App() {
                 </Layout>
               </ProtectedRoute>
             } />
+            <Route path="/tasks" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Tasks />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/tasks/new" element={<Navigate to="/tasks?new=true" replace />} />
             <Route path="/documents" element={
               <ProtectedRoute>
                 <Layout>

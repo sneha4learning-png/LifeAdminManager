@@ -12,7 +12,8 @@ import {
   History,
   LayoutDashboard,
   Moon,
-  Sun
+  Sun,
+  CheckCircle2
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -36,9 +37,11 @@ const Layout = ({ children }) => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'My Reminders', path: '/tasks', icon: CheckCircle2 },
     { name: 'My Documents', path: '/documents', icon: FileText },
+    { name: 'Add Reminder', path: '/tasks/new', icon: PlusCircle },
     { name: 'Add Document', path: '/add-document', icon: PlusCircle },
-    { name: 'History', path: '/audit', icon: History },
+    { name: 'Audit Logs', path: '/audit', icon: History },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
