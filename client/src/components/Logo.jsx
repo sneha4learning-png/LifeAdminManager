@@ -26,13 +26,13 @@ const Logo = ({ className, light = false }) => {
               ? "text-white" 
               : "bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent"
           )}>
-            Life
+            Left
           </span>
           <span className={cn(
             "text-2xl font-black leading-none tracking-tight",
             light ? "text-white/80" : "text-neutral-primary"
           )}>
-            Admin
+            Admin Project
           </span>
         </div>
         <span className={cn(

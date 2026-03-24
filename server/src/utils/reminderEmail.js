@@ -5,12 +5,16 @@ const sendMail = require('./mailSender');
  * Uses the user's registration email for dispatch.
  */
 const sendReminderEmail = async (userEmail, document, userName = 'Valued Member') => {
-  const subject = `🛡️ Urgent: Action Required for ${document.name} Renewal`;
+  const subject = `🛡️ Security Alert: Action Required for ${document.name}`;
   
-  const dashboardLink = process.env.CLIENT_URL || 'http://localhost:5173';
-  const expiryDateString = new Date(document.expiryDate).toDateString();
+  const dashboardLink = process.env.CLIENT_URL || 'https://life-admin-manager-97c01.web.app';
+  const expiryDateString = new Date(document.expiryDate).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
   
-  // Format user name for greeting
   const formattedName = userName.split(' ').map(n => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase()).join(' ');
 
   const html = `
@@ -19,71 +23,69 @@ const sendReminderEmail = async (userEmail, document, userName = 'Valued Member'
     <head>
       <meta charset="utf-8">
       <style>
-        .container { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .header { background: linear-gradient(135deg, #0062FF 0%, #0045B5 100%); padding: 40px 20px; text-align: center; color: white; }
-        .content { padding: 40px; color: #333333; line-height: 1.6; }
-        .doc-table { width: 100%; border-collapse: collapse; margin: 25px 0; background-color: #f8faff; border-radius: 8px; overflow: hidden; }
-        .doc-table td { padding: 15px; border-bottom: 1px solid #e1e8f5; }
-        .doc-table td.label { font-weight: bold; color: #666; width: 35%; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .doc-table td.value { color: #111; font-weight: 500; }
-        .id-badge { display: inline-block; padding: 2px 8px; background-color: #eee; border-radius: 4px; font-family: monospace; font-size: 11px; color: #666; margin-bottom: 10px; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; background-color: #FFEBEB; color: #EF4444; margin-bottom: 15px; }
-        .cta-button { display: inline-block; background-color: #0062FF; color: white !important; text-decoration: none; padding: 14px 30px; border-radius: 6px; font-weight: bold; margin-top: 10px; }
-        .footer { padding: 30px; text-align: center; font-size: 12px; color: #888888; background-color: #fdfdfd; border-top: 1px solid #eeeeee; }
-        .security-tip { font-size: 13px; color: #666; background-color: #fff9db; padding: 15px; border-radius: 6px; margin-top: 25px; border: 1px dashed #fab005; }
+        body { background-color: #f0fdfa; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(20, 184, 166, 0.1); border: 1px solid #ccfbf1; }
+        .header { background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%); padding: 45px 30px; text-align: center; color: white; }
+        .header-logo { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; }
+        .header-tagline { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; opacity: 0.8; }
+        .content { padding: 40px; color: #374151; line-height: 1.6; }
+        .greeting { font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 10px; }
+        .accent-text { color: #14B8A6; }
+        .doc-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; margin: 30px 0; }
+        .status-pill { display: inline-block; padding: 5px 12px; background-color: #ffe4e6; color: #f43f5e; border-radius: 9999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+        .data-label { color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .data-value { color: #1e293b; font-weight: 600; font-size: 14px; }
+        .data-value.expiry { color: #f43f5e; }
+        .cta-container { text-align: center; margin-top: 35px; }
+        .cta-button { display: inline-block; background-color: #14B8A6; color: white !important; text-decoration: none; padding: 16px 36px; border-radius: 10px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px rgba(20, 184, 166, 0.4); }
+        .footer { padding: 30px; text-align: center; font-size: 11px; color: #94a3b8; background-color: #f8fafc; border-top: 1px solid #f1f5f9; }
+        .footer p { margin: 5px 0; }
+        .security-note { font-size: 12px; color: #64748b; margin-top: 25px; padding: 15px; border-radius: 8px; background-color: #fff7ed; border: 1px dashed #fdba74; text-align: center; }
       </style>
     </head>
-    <body style="background-color: #f4f7f9; padding: 20px;">
+    <body>
       <div class="container">
         <div class="header">
-          <h1 style="margin: 0; font-size: 28px; letter-spacing: -1px;">Life Admin Manager</h1>
-          <p style="margin: 5px 0 0 0; opacity: 0.8; font-weight: 500;">Secure Vault Notification</p>
+          <div class="header-logo">Life Admin Project</div>
+          <div class="header-tagline">Master Secure Vault</div>
         </div>
         
         <div class="content">
-          <h2 style="color: #111; margin-top: 0; font-size: 22px;">Security Renewal Alert</h2>
-          <p>Hello <strong style="color: #0062FF;">${formattedName}</strong>,</p>
-          <p>Our automated lifecycle monitoring system has identified a key record in your vault that requires renewal to maintain compliance and security.</p>
+          <div class="greeting">Hello <span class="accent-text">${formattedName}</span>,</div>
+          <p>Our security system has analyzed your vault and identified a document that requires your immediate attention to maintain compliance and availability.</p>
           
-          <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 25px;">
-            <div class="id-badge">Reference ID: ${document._id || 'N/A'}</div><br/>
-            <span class="status-badge">Requires Attention</span>
+          <div class="doc-card">
+            <div class="status-pill">Action Required</div>
             
-            <table class="doc-table">
-              <tr>
-                <td class="label" style="padding-right: 20px; white-space: nowrap; min-width: 140px;">Document Label</td>
-                <td class="value">${document.name.charAt(0).toUpperCase() + document.name.slice(1).toLowerCase()}</td>
-              </tr>
-              <tr>
-                <td class="label" style="padding-right: 20px; white-space: nowrap; min-width: 140px;">Category</td>
-                <td class="value">${document.category === 'ID' ? 'Identity Card / Passport' : (document.category || 'Personal Document')}</td>
-              </tr>
-              <tr>
-                <td class="label" style="padding-right: 20px; white-space: nowrap; min-width: 140px;">Expiry Date</td>
-                <td class="value" style="color: #EF4444; font-weight: bold;">${expiryDateString}</td>
-              </tr>
-              ${document.notes ? `<tr><td class="label" style="padding-right: 20px; min-width: 140px;">User Notes</td><td class="value" style="font-style: italic;">${document.notes}</td></tr>` : ''}
-            </table>
+            <div class="data-row">
+              <span class="data-label">Document</span>
+              <span class="data-value">${document.name}</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Category</span>
+              <span class="data-value">${document.category}</span>
+            </div>
+            <div class="data-row" style="border-bottom: none;">
+              <span class="data-label">Expiry Date</span>
+              <span class="data-value expiry">${expiryDateString}</span>
+            </div>
           </div>
           
-          <p>To ensure continuity and maintain vault accuracy, please log in and update this record at your earliest convenience.</p>
+          <p>To avoid any disruption or potential renewal delays, we recommend reviewing this document and initiating the renewal process if applicable.</p>
           
-          <div style="text-align: center; margin-top: 10px;">
-            <a href="${dashboardLink}" class="cta-button" target="_blank">Access My Vault</a>
-            <p style="margin-top: 20px; font-size: 11px; color: #999;">
-              If the button doesn't work, copy-paste this URL into your browser:<br/>
-              <span style="color: #0062FF;">${dashboardLink}</span>
-            </p>
+          <div class="cta-container">
+            <a href="${dashboardLink}" class="cta-button">Access Secure Vault</a>
           </div>
 
-          <div class="security-tip">
-            <strong>🔒 Verification Tip:</strong> Always verify that you are on <u>${dashboardLink}</u> before entering your vault credentials.
+          <div class="security-note">
+            <strong>🔒 Security Protection:</strong> Your document details remain encrypted. This notification has been sent via your automated private relay.
           </div>
         </div>
         
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Life Admin Manager Official</p>
-          <p style="margin-top: 5px;">Secure document storage and lifecycle management.</p>
+          <p>© ${new Date().getFullYear()} Life Admin Project • Secure Infrastructure</p>
+          <p>This message was intended for ${userEmail}.</p>
         </div>
       </div>
     </body>
