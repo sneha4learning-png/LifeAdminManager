@@ -21,13 +21,16 @@ const Logo = ({ className, light = false }) => {
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5">
           <span className={cn(
-            "text-2xl font-black leading-none tracking-tight bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent",
+            "text-2xl font-black leading-none tracking-tight",
+            light 
+              ? "text-white" 
+              : "bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent"
           )}>
             Life
           </span>
           <span className={cn(
             "text-2xl font-black leading-none tracking-tight",
-            light ? "text-white/90" : "text-neutral-primary"
+            light ? "text-white/80" : "text-neutral-primary"
           )}>
             Admin
           </span>
