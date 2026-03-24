@@ -1,25 +1,10 @@
 const cron = require('node-cron');
-const fs = require('fs');
-const path = require('path');
+const Document = require('../models/Document');
+const User = require('../models/User');
 const sendReminderEmail = require('./reminderEmail');
-
-const DATA_FILE = path.join(__dirname, '../../local_vault.json');
-
-// Persistence helper for the daily scheduler
-const loadData = () => {
-  if (!fs.existsSync(DATA_FILE)) return { documents: [] };
-  try {
-    const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-    return { 
-      documents: data.documents || [],
-      users: data.users || {}
-    };
-  } catch (e) { return { documents: [] }; }
-};
 
 /**
  * Scheduled task that runs daily to check for documents nearing expiry.
- * It sends real emails via Resend to the user's registration address.
  */
 const scheduleReminders = () => {
   // Run daily at 08:00 AM
@@ -30,13 +15,13 @@ const scheduleReminders = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const { documents, users } = loadData();
+      const documents = await Document.find({ 
+        expiryDate: { $gt: today } // Only check future expiries to avoid spam/redundancy
+      });
 
       for (const doc of documents) {
-        // Find the owner by ID from the users object
-        const userObj = Object.values(users).find(u => u._id === doc.userId) || Object.values(users)[0];
-        const userEmail = userObj?.email;
-        if (!userEmail) continue;
+        const user = await User.findById(doc.userId);
+        if (!user) continue;
 
         const expDate = new Date(doc.expiryDate);
         expDate.setHours(0, 0, 0, 0);
@@ -46,8 +31,8 @@ const scheduleReminders = () => {
 
         // Trigger reminder if it matches the user-defined threshold
         if (diffDays === (doc.reminderDaysBefore || 7)) {
-          console.log(`[Scheduler] Dispatching real reminder for "${doc.name}" to ${userEmail}`);
-          await sendReminderEmail(userEmail, doc, userObj?.name || 'Valued Member');
+          console.log(`[Scheduler] Dispatching reminder for "${doc.name}" to ${user.email}`);
+          await sendReminderEmail(user.email, doc, user.name);
         }
       }
     } catch (error) {
@@ -57,3 +42,4 @@ const scheduleReminders = () => {
 };
 
 module.exports = scheduleReminders;
+
