@@ -15,15 +15,15 @@ const sendMail = async ({ to, subject, html }) => {
         to: [to],
         subject: subject,
         html: html,
-        // Disable click tracking to avoid the Chrome "Privacy Error"
+        // Correct API spec to disable click tracking
         tracking_settings: {
-          click: {
-            enable: false
-          }
+          click: false,
+          open: false
         },
-        // Prevent Gmail from "clipping" content by making every email unique
+        // Force-disable tracking via headers as a secondary safeguard
         headers: {
           'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+          'X-Resend-Click-Tracking': 'false',
           'List-Unsubscribe': `<mailto:unsubscribe@life-admin-manager.com>`
         }
       }, {
