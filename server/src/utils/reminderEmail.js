@@ -7,7 +7,7 @@ const sendMail = require('./mailSender');
 const sendReminderEmail = async (userEmail, document, userName = 'Valued Member') => {
   const subject = `🛡️ Security Alert: Action Required for ${document.name}`;
   
-  const dashboardLink = process.env.CLIENT_URL || 'https://life-admin-manager-97c01.web.app';
+  const dashboardLink = 'https://life-admin-manager-97c01.web.app/';
   const expiryDateString = new Date(document.expiryDate).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
