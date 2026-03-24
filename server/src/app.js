@@ -25,8 +25,9 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/documents', require('./routes/documentRoutes'));
-app.use('/api/tasks', require('./routes/taskRoutes')); // 🆕 NEW: To-Do App Reminders
+app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/settings', require('./routes/settingsRoutes'));
+app.use('/api/audit', require('./routes/auditRoutes')); // 🛡️ REAL Audit Logs Protocol
 
 /**
  * Central Error Handler

@@ -14,6 +14,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Settings from './pages/Settings';
 import Tasks from './pages/Tasks';
+import AuditLogs from './pages/AuditLogs';
 
 function App() {
   return (
@@ -68,13 +69,7 @@ function App() {
             <Route path="/audit" element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="bg-neutral-card p-8 rounded-xl border border-neutral-border shadow-soft-md text-center py-20 transition-colors duration-200">
-                     <div className="w-16 h-16 bg-brand-primary/10 rounded-xl flex items-center justify-center mx-auto text-brand-primary mb-6">
-                        <History size={32} />
-                     </div>
-                     <h2 className="heading-xl">Audit Logs Protocol</h2>
-                     <p className="text-neutral-secondary text-sm mt-3 font-medium">Initialization of secure document interaction history coming soon.</p>
-                  </div>
+                  <AuditLogs />
                 </Layout>
               </ProtectedRoute>
             } />

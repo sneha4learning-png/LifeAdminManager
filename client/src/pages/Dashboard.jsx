@@ -21,29 +21,44 @@ const cn = (...inputs) => twMerge(clsx(inputs));
 
 const Dashboard = () => {
   const [documents, setDocuments] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDocs = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get('/api/documents');
-        setDocuments(res.data);
+        const [docsRes, tasksRes] = await Promise.all([
+          axios.get('/api/documents'),
+          axios.get('/api/tasks')
+        ]);
+        setDocuments(docsRes.data);
+        setTasks(tasksRes.data);
       } catch (err) {
-        console.error('Failed to fetch docs', err);
+        console.error('Data sync failed', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchDocs();
+    fetchData();
   }, []);
+
+  const handleTaskToggle = async (id) => {
+    try {
+      const res = await axios.patch(`/api/tasks/${id}/toggle`);
+      setTasks(tasks.map(t => t._id === id ? res.data : t));
+    } catch (err) {
+      console.error('Task update failed', err);
+    }
+  };
 
   const stats = {
     total: documents.length,
-    upcoming: documents.filter(doc => doc.status === 'Upcoming').length,
-    overdue: documents.filter(doc => doc.status === 'Overdue').length,
-    safe: documents.filter(doc => doc.status === 'Safe').length,
+    activeTasks: tasks.filter(t => !t.completed).length,
+    overdueTasks: tasks.filter(t => !t.completed && new Date(t.dueDate) < new Date()).length,
+    upcomingDocs: documents.filter(doc => doc.status === 'Upcoming').length,
   };
 
+  const urgentTasks = tasks.filter(t => !t.completed).slice(0, 3);
   const criticalItems = documents.filter(doc => doc.status === 'Overdue').slice(0, 3);
   const upcomingItems = documents.filter(doc => doc.status === 'Upcoming').slice(0, 3);
 
@@ -51,7 +66,7 @@ const Dashboard = () => {
     <div className="flex items-center justify-center p-12">
       <div className="flex flex-col items-center gap-3">
         <Activity size={32} className="text-brand-primary animate-spin" />
-        <p className="text-neutral-secondary font-medium text-sm">Accessing Vault...</p>
+        <p className="text-neutral-secondary font-medium text-sm">Syncing Vault & Protocol...</p>
       </div>
     </div>
   );
@@ -74,9 +89,9 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: 'Total Documents', value: stats.total, icon: FolderCheck, color: 'text-brand-primary', bg: 'bg-brand-light dark:bg-brand-primary/10' },
-          { label: 'Upcoming', value: stats.upcoming, icon: Clock, color: 'text-warning-text', bg: 'bg-warning-bg dark:bg-warning-text/10' },
-          { label: 'Overdue', value: stats.overdue, icon: AlertCircle, color: 'text-danger-text', bg: 'bg-danger-bg dark:bg-danger-text/10' },
-          { label: 'Safe', value: stats.safe, icon: ShieldCheck, color: 'text-success-text', bg: 'bg-success-bg dark:bg-success-text/10' },
+          { label: 'Active Tasks', value: stats.activeTasks, icon: Activity, color: 'text-success-text', bg: 'bg-success-bg dark:bg-success-text/10' },
+          { label: 'Overdue Reminders', value: stats.overdueTasks, icon: AlertCircle, color: 'text-danger-text', bg: 'bg-danger-bg dark:bg-danger-text/10' },
+          { label: 'Expiring Soon', value: stats.upcomingDocs, icon: Clock, color: 'text-warning-text', bg: 'bg-warning-bg dark:bg-warning-text/10' },
         ].map((stat, i) => (
           <div key={i} className="card p-5 flex items-center gap-4">
             <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center shrink-0", stat.bg, stat.color)}>
@@ -91,16 +106,16 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Alerts Column */}
+        {/* Agenda Column */}
         <div className="lg:col-span-1 space-y-6">
            <div className="bg-brand-primary rounded-xl p-6 text-white overflow-hidden relative group shadow-soft-lg">
               <div className="relative z-10 flex flex-col h-full justify-between gap-6">
                  <div>
-                    <h3 className="text-lg font-bold">Vault Security</h3>
-                    <p className="text-sm text-white/80 mt-2 leading-relaxed">Your documents are safe and currently being monitored for expiration.</p>
+                    <h3 className="text-lg font-bold">Protocol Sync</h3>
+                    <p className="text-sm text-white/80 mt-2 leading-relaxed">Your secure vault is synced with the latest audit protocol.</p>
                  </div>
                  <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest">
-                    <span>Status: Optimal</span>
+                    <span>Status: Optimized</span>
                     <div className="w-2 h-2 rounded-full bg-success-bg animate-pulse" />
                  </div>
               </div>
@@ -109,8 +124,33 @@ const Dashboard = () => {
 
            <div className="space-y-4">
               <h3 className="text-xs font-bold text-neutral-secondary uppercase tracking-widest flex items-center gap-2">
+                <ShieldCheck size={14} className="text-brand-primary" />
+                Today's Agenda
+              </h3>
+              <div className="space-y-3">
+                 {urgentTasks.length > 0 ? urgentTasks.map(task => (
+                   <div key={task._id} className="flex items-center justify-between p-4 card hover:border-brand-primary transition-colors group">
+                     <div className="flex items-center gap-3 min-w-0">
+                       <button 
+                         onClick={() => handleTaskToggle(task._id)}
+                         className="w-5 h-5 rounded-md border border-brand-primary/30 flex items-center justify-center text-brand-primary hover:bg-brand-primary/10 transition-all"
+                       >
+                         {task.completed && <Activity size={12} />}
+                       </button>
+                       <p className={cn("text-sm font-medium text-neutral-primary truncate", task.completed && "line-through opacity-50")}>{task.title}</p>
+                     </div>
+                     <span className="text-[10px] font-bold text-neutral-secondary">{task.priority}</span>
+                   </div>
+                 )) : (
+                   <p className="text-xs text-neutral-secondary italic py-2">Agenda is clean.</p>
+                 )}
+              </div>
+           </div>
+
+           <div className="space-y-4 pt-4 border-t border-neutral-border">
+              <h3 className="text-xs font-bold text-neutral-secondary uppercase tracking-widest flex items-center gap-2">
                 <AlertCircle size={14} className="text-danger-text" />
-                Urgent Action
+                Urgent Documents
               </h3>
               <div className="space-y-3">
                  {criticalItems.length > 0 ? criticalItems.map(item => (
@@ -123,26 +163,6 @@ const Dashboard = () => {
                    </Link>
                  )) : (
                    <p className="text-xs text-neutral-secondary italic py-2">No urgent documents.</p>
-                 )}
-              </div>
-           </div>
-
-           <div className="space-y-4">
-              <h3 className="text-xs font-bold text-neutral-secondary uppercase tracking-widest flex items-center gap-2">
-                <Clock size={14} className="text-warning-text" />
-                Upcoming Deadlines
-              </h3>
-              <div className="space-y-3">
-                 {upcomingItems.length > 0 ? upcomingItems.map(item => (
-                   <Link to={`/documents`} key={item._id} className="flex items-center justify-between p-4 card hover:border-brand-primary transition-colors group">
-                     <div className="flex items-center gap-3 min-w-0">
-                       <div className="status-dot status-warning shrink-0" />
-                       <p className="text-sm font-medium text-neutral-primary truncate">{item.name}</p>
-                     </div>
-                     <ChevronRight size={14} className="text-neutral-secondary group-hover:text-brand-primary transition-colors" />
-                   </Link>
-                 )) : (
-                   <p className="text-xs text-neutral-secondary italic py-2">No upcoming deadlines.</p>
                  )}
               </div>
            </div>

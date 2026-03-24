@@ -10,4 +10,7 @@ router.patch('/:id/toggle', auth, taskController.toggleComplete);
 router.put('/:id', auth, taskController.updateTask);
 router.delete('/:id', auth, taskController.deleteTask);
 
+// Public Link for One-Click Rescheduling (Inbox Actions)
+router.get('/:id/reschedule/:days', taskController.rescheduleTask);
+
 module.exports = router;

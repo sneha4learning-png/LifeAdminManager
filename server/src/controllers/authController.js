@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const logAction = require('../utils/auditLogger');
 
 exports.registerUser = async (req, res) => {
   try {
@@ -12,6 +13,9 @@ exports.registerUser = async (req, res) => {
     }
 
     user = await User.create({ name, email, password });
+    
+    // Audit Log: Registration
+    await logAction(user._id, 'USER_REGISTER', `New account created for ${name}`, req);
     
     const token = jwt.sign({ id: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET || 'supersecret123', {
         expiresIn: '30d'
@@ -48,6 +52,9 @@ exports.loginUser = async (req, res) => {
         expiresIn: '30d'
     });
 
+    // Audit Log: Login
+    await logAction(user._id, 'USER_LOGIN', `Successful login from ${email}`, req);
+    
     res.status(200).json({
       _id: user._id,
       id: user._id,
