@@ -47,8 +47,8 @@ const Register = () => {
     <div className="min-h-screen bg-neutral-bg flex flex-col md:flex-row relative overflow-hidden transition-colors duration-200 text-neutral-primary">
       
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 opacity-60 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-success-bg/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 opacity-40 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-primary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 opacity-60 pointer-events-none animate-pulse" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-accent/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 opacity-40 pointer-events-none" />
 
       {/* Left Panel: Branding & Features (Desktop) */}
       <div className="hidden lg:flex w-2/5 xl:w-1/2 bg-brand-primary relative p-16 flex-col justify-between overflow-hidden group shadow-2xl">
@@ -65,7 +65,7 @@ const Register = () => {
                  <span className="text-white underline decoration-white/30 underline-offset-8">Digital Assets.</span>
                </h2>
                <p className="text-xl text-white/80 font-medium max-w-lg leading-relaxed">
-                 Join thousands who trust Antigravity to manage their life administration efficiently and securely.
+                 Join thousands who trust this platform to manage their life administration efficiently and securely.
                </p>
             </div>
 

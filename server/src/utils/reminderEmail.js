@@ -82,7 +82,7 @@ const sendReminderEmail = async (userEmail, document, userName = 'Valued Member'
         </div>
         
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Antigravity Life Admin Manager</p>
+          <p>© ${new Date().getFullYear()} Life Admin Manager Official</p>
           <p style="margin-top: 5px;">Secure document storage and lifecycle management.</p>
         </div>
       </div>
