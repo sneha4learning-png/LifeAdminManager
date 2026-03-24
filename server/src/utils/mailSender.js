@@ -1,68 +1,60 @@
+const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
-const axios = require('axios');
 
 /**
- * Enhanced mail sender that supports both SMTP and Resend API.
- * This is the "Another Solution" for more reliable delivery.
+ * Enhanced mail sender that uses the OFFICIAL RESEND SDK.
+ * This is the ultimate fix for the "Privacy Error" and "Clipping" issues.
  */
 const sendMail = async ({ to, subject, html }) => {
   try {
-    // SOLUTION A: Resend API (Priority if API Key is present)
+    // 🛡️ SOLUTION A: Official Resend SDK (Primary)
     if (process.env.RESEND_API_KEY) {
-      console.log('[Life Admin Project] Attempting dispatch via Resend API...');
-      const response = await axios.post('https://api.resend.com/emails', {
-        from: `Life Admin Project <onboarding@resend.dev>`,
+      console.log('[Life Admin Project] Dispatching via Official Resend SDK...');
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      
+      const { data, error } = await resend.emails.send({
+        from: 'Life Admin Project <onboarding@resend.dev>',
         to: [to],
-        subject: subject,
+        subject: `🔔 [NEW] ${subject}`, // Marked as NEW to avoid Gmail clipping
         html: html,
-        // Exact API spec to disable click tracking (Requires "enabled" with a 'd')
-        tracking_settings: {
-          click: {
-            enabled: false
-          },
-          open: {
-            enabled: false
-          }
-        },
-        // Force-disable tracking via headers as a secondary safeguard
         headers: {
-          'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(7)}`,
-          'X-Resend-Click-Tracking': 'false',
-          'List-Unsubscribe': `<mailto:unsubscribe@life-admin-manager.com>`
+          'X-Entity-Ref-ID': `${Date.now()}`,
+          'X-Click-Tracking': 'false' 
         }
-      }, {
-        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` }
       });
-      console.log(`[Resend API] Dispatch successful for ${to}:`, response.data.id);
+
+      if (error) {
+        console.error('[Resend Error Callback]:', error.message);
+        throw new Error(error.message);
+      }
+
+      console.log(`[Resend SDK] Dispatch successful:`, data.id);
       return { success: true };
     }
 
-    // SOLUTION B: Traditional SMTP (Gmail/Outlook Fallback)
-    console.log('[Life Admin Manager] Falling back to SMTP relay...');
+    // 🛡️ SOLUTION B: Traditional SMTP Fallback
+    console.log('[Life Admin Project] Falling back to SMTP...');
     const transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+      tls: { rejectUnauthorized: false }
     });
 
     const info = await transporter.sendMail({
-      from: `"Life Admin Manager" <${process.env.EMAIL_USER}>`,
+      from: `"Life Admin Project" <${process.env.EMAIL_USER}>`,
       to, 
-      subject, 
+      subject: `🔔 [NEW] ${subject}`,
       html
     });
 
-    console.log(`[SMTP] Email sent to ${to}:`, info.messageId);
+    console.log(`[SMTP] Success:`, info.messageId);
     return { success: true };
   } catch (error) {
-    const errorMsg = error.response?.data?.message || error.message;
-    console.error('Master Mailer Critical Error:', errorMsg);
-    return { success: false, error: errorMsg };
+    console.error('Master Mailer Error:', error.message);
+    return { success: false, error: error.message };
   }
 };
 
