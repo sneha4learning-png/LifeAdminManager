@@ -26,7 +26,7 @@ const Logo = ({ className, light = false }) => {
               ? "text-white" 
               : "bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent"
           )}>
-            Left
+            Life
           </span>
           <span className={cn(
             "text-2xl font-black leading-none tracking-tight",

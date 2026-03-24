@@ -51,8 +51,8 @@ const Login = () => {
     <div className="min-h-screen bg-neutral-bg flex flex-col md:flex-row relative overflow-hidden font-sans transition-colors duration-200 text-neutral-primary">
       
       {/* Decorative Gradient Background */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-primary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 opacity-70 pointer-events-none animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-accent/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 opacity-50 pointer-events-none" />
+      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-brand-primary/20 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-brand-accent/20 rounded-full blur-[120px] animate-pulse delay-700" />
 
       {/* Left Panel: Branding */}
       <div className="hidden lg:flex w-[40%] bg-brand-primary relative p-12 flex-col justify-between overflow-hidden shadow-2xl">

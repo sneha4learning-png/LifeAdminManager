@@ -124,7 +124,7 @@ const AddDocument = () => {
                    <input 
                     type="number"
                     min="1"
-                    defaultValue={7}
+                    defaultValue={3}
                     {...register('reminderDaysBefore', { 
                       required: 'Required', 
                       min: { value: 1, message: 'Minimum 1 day' },
@@ -136,7 +136,7 @@ const AddDocument = () => {
                     )}
                   />
                   <div>
-                    <p className="text-xs text-neutral-secondary">How many days before expiry should we notify you?</p>
+                    <p className="text-xs text-neutral-secondary">Set an earlier warning (e.g. 14 or 30 days) or keep the standard 3-day reminder.</p>
                     {errors.reminderDaysBefore && <p className="text-[10px] text-danger-text font-bold mt-1 uppercase tracking-widest">{errors.reminderDaysBefore.message}</p>}
                   </div>
                 </div>
