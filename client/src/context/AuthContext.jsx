@@ -10,8 +10,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Set default axios base URL
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
+  // Set default axios base URL - fallback to production Render URL
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'https://lifeadminmanager.onrender.com';
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
