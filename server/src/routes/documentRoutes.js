@@ -11,6 +11,7 @@ router.post('/test-reminder/:id', protect, testReminder);
 
 router.route('/:id')
   .put(protect, updateDocument)
-  .delete(protect, deleteDocument);
+  .delete(protect, deleteDocument)
+  .patch(protect, require('../controllers/documentController').toggleComplete);
 
 module.exports = router;

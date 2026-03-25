@@ -8,15 +8,17 @@ import {
   AlertCircle,
   Clock,
   Edit2,
-  Trash2
+  Trash2,
+  CheckCircle2,
+  Circle
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
-const DocumentCard = ({ document, onEdit, onDelete }) => {
-  const { name, category, expiryDate, reminderDaysBefore, status, notes } = document;
+const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
+  const { name, category, expiryDate, reminderDaysBefore, status, notes, completed } = document;
   
   const getStatusStyles = () => {
     switch (status) {
@@ -45,15 +47,38 @@ const DocumentCard = ({ document, onEdit, onDelete }) => {
     }
   };
 
+  const handleToggleComplete = async (e) => {
+    e.stopPropagation();
+    try {
+      await axios.patch(`/api/documents/${document._id}`);
+      onRefresh?.();
+    } catch (err) {
+      console.error('Toggle failed', err);
+    }
+  };
+
   return (
-    <div className="card group flex flex-col h-full relative overflow-hidden">
+    <div className={cn(
+      "card group flex flex-col h-full relative overflow-hidden transition-all duration-300",
+      completed && "opacity-60 grayscale-[0.3] bg-neutral-bg/50"
+    )}>
        {/* Card Header & Status */}
        <div className="flex items-center justify-between p-4 bg-black/5 dark:bg-white/5 border-b border-neutral-border shrink-0">
           <div className={cn("inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border", styles.bg)}>
             <styles.icon size={12} className="transition-transform group-hover:scale-110 duration-300" />
-            {status}
+            {completed ? 'COMPLETED' : status}
           </div>
           <div className="flex items-center gap-1 opacity-100 transition-opacity">
+            <button 
+              onClick={handleToggleComplete}
+              className={cn(
+                "p-1.5 rounded-md transition-colors shadow-soft-md",
+                completed ? "text-success-text bg-success-bg/20" : "text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card"
+              )}
+              title={completed ? "Mark as Pending" : "Mark as Done"}
+            >
+              {completed ? <CheckCircle2 size={14} /> : <Circle size={14} />}
+            </button>
             <button 
               onClick={handleTestReminder}
               className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors shadow-soft-md"

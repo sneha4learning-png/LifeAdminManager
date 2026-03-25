@@ -180,7 +180,7 @@ const Dashboard = () => {
 
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {documents.slice(0, 4).map(doc => (
-                <DocumentCard key={doc._id} document={doc} />
+                <DocumentCard key={doc._id} document={doc} onRefresh={() => window.location.reload()} />
               ))}
               {documents.length === 0 && (
                 <div className="col-span-full py-20 card border-dashed flex flex-col items-center justify-center gap-4 text-center p-8">

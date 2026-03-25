@@ -34,6 +34,10 @@ const documentSchema = new mongoose.Schema({
     enum: ['Safe', 'Upcoming', 'Overdue'],
     default: 'Safe',
   },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Document', documentSchema);

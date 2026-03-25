@@ -57,11 +57,12 @@ const Documents = () => {
 
   const filteredDocs = documents.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(search.toLowerCase());
+    if (filter === 'Completed') return doc.completed && matchesSearch;
     const matchesFilter = filter === 'All' || doc.category === filter || doc.status === filter;
-    return matchesSearch && matchesFilter;
+    return matchesSearch && matchesFilter && !doc.completed; // Hide completed in other filters
   });
 
-  const categories = ['All', 'ID', 'Finance', 'Bills', 'Other'];
+  const categories = ['All', 'ID', 'Finance', 'Bills', 'Completed', 'Other'];
   const statuses = ['Overdue', 'Upcoming', 'Safe'];
 
   if (loading) return (
@@ -161,15 +162,15 @@ const Documents = () => {
         )}>
           {filteredDocs.map(doc => (
             view === 'grid' ? (
-              <DocumentCard key={doc._id} document={doc} onDelete={handleDelete} onEdit={() => {}} />
+              <DocumentCard key={doc._id} document={doc} onDelete={handleDelete} onEdit={() => {}} onRefresh={fetchDocs} />
             ) : (
-              <div key={doc._id} className="card p-4 flex items-center justify-between group">
+              <div key={doc._id} className={cn("card p-4 flex items-center justify-between group", doc.completed && "opacity-60")}>
                  <div className="flex items-center gap-6 min-w-0 flex-1">
                     <div className={cn(
                        "w-12 h-12 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs",
-                       doc.status === 'Overdue' ? 'bg-danger-bg text-danger-text' : (doc.status === 'Upcoming' ? 'bg-warning-bg text-warning-text' : 'bg-success-bg text-success-text')
+                       doc.completed ? "bg-success-bg text-brand-primary" : (doc.status === 'Overdue' ? 'bg-danger-bg text-danger-text' : (doc.status === 'Upcoming' ? 'bg-warning-bg text-warning-text' : 'bg-success-bg text-success-text'))
                     )}>
-                       {doc.category.slice(0,3)}
+                       {doc.completed ? <CheckCircle2 size={24} /> : doc.category.slice(0,3)}
                     </div>
                     <div className="flex-1 min-w-0">
                        <h4 className="text-sm font-bold text-neutral-primary group-hover:text-brand-primary transition-colors truncate">{doc.name}</h4>
