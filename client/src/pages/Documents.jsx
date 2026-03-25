@@ -15,7 +15,9 @@ import {
   Activity,
   Trash2,
   Edit,
-  Pencil
+  Pencil,
+  CheckCircle2,
+  Calendar
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
