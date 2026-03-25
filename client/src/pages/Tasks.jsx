@@ -34,14 +34,18 @@ const Tasks = () => {
     category: 'General'
   });
 
+  const [prevShowAddModal, setPrevShowAddModal] = useState(false);
+
   useEffect(() => {
     fetchTasks();
     if (location.search.includes('new=true')) {
       setShowAddModal(true);
     }
-    
-    // Set default time to current time when modal opens
-    if (showAddModal) {
+  }, [location]);
+
+  // Set default time ONLY when the modal is first opened
+  useEffect(() => {
+    if (showAddModal && !prevShowAddModal) {
       const now = new Date();
       setNewTask(prev => ({
         ...prev,
@@ -49,7 +53,8 @@ const Tasks = () => {
         dueTime: now.toTimeString().slice(0, 5)
       }));
     }
-  }, [location, showAddModal]);
+    setPrevShowAddModal(showAddModal);
+  }, [showAddModal]);
 
   const fetchTasks = async () => {
     try {
