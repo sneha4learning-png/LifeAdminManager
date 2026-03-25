@@ -30,14 +30,14 @@ const Logo = ({ className, light = false }) => {
           </span>
           <span className={cn(
             "text-2xl font-black leading-none tracking-tight",
-            light ? "text-white/80" : "text-neutral-primary"
+            light ? "text-white" : "text-neutral-primary"
           )}>
             Admin
           </span>
         </div>
         <span className={cn(
-          "text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5 leading-none opacity-60",
-          light ? "text-white/40" : "text-neutral-secondary"
+          "text-[10px] font-black uppercase tracking-[0.25em] mt-1.5 leading-none",
+          light ? "text-white/60" : "text-neutral-secondary/60"
         )}>
           Your Personal Manager
         </span>
