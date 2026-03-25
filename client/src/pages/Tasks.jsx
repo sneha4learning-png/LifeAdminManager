@@ -97,23 +97,31 @@ const Tasks = () => {
     }
 
     // Construct absolute UTC reminder date for backend scheduler
-    const reminderDate = new Date(newTask.dueDate);
-    const [hours, mins] = newTask.dueTime.split(':');
-    reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
-
     try {
+      if (!newTask.dueDate || !newTask.dueTime) throw new Error("Please select both a date and a time.");
+      
+      const reminderDate = new Date(newTask.dueDate);
+      const [hours, mins] = newTask.dueTime.split(':');
+      reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+      
+      console.log('--- SAVING TASK ---');
+      console.log('Due Date:', newTask.dueDate);
+      console.log('Due Time:', newTask.dueTime);
+      console.log('Calculated UTC:', reminderDate.toISOString());
+
       const res = await axios.post('/api/tasks', { ...newTask, reminderAt: reminderDate.toISOString() });
       setTasks([...tasks, res.data]);
       setShowAddModal(false);
       setNewTask({ 
         title: '', 
         dueDate: new Date().toISOString().split('T')[0], 
-        dueTime: '09:00',
+        dueTime: new Date().toTimeString().slice(0, 5),
         priority: 'Medium', 
         category: 'General' 
       });
     } catch (err) {
-      console.error('Add failed', err);
+      console.error('Add failed:', err);
+      alert('Save Error: ' + (err.response?.data?.message || err.message));
     }
   };
 
