@@ -52,7 +52,7 @@ const AddDocument = () => {
           Back to Documents
         </Link>
         <div className="flex items-center justify-between">
-           <h1 className="heading-xl">Add New Document</h1>
+           <h1 className="heading-xl">Add New <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">Document</span></h1>
            <div className="hidden sm:flex items-center gap-2 text-brand-primary bg-brand-light dark:bg-brand-primary/10 px-3 py-1.5 rounded-lg border border-brand-primary/10">
              <ShieldCheck size={14} />
              <p className="text-[10px] font-bold uppercase tracking-widest">Secure Entry</p>
@@ -180,17 +180,17 @@ const AddDocument = () => {
           </form>
         </div>
 
-        {/* Sidebar Tips */}
+         {/* Sidebar Tips */}
         <div className="space-y-6">
-           <div className="p-6 bg-brand-accent rounded-xl text-white relative overflow-hidden group shadow-soft-lg">
+           <div className="p-6 bg-gradient-to-br from-brand-primary to-brand-accent rounded-2xl text-white relative overflow-hidden group shadow-soft-xl border border-white/10">
               <div className="relative z-10 space-y-4">
-                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-white border border-white/20 group-hover:bg-white group-hover:text-brand-accent transition-all duration-300">
+                 <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white border border-white/20 group-hover:bg-white group-hover:text-brand-primary transition-all duration-500 scale-110 -translate-x-1">
                     <Sparkles size={18} />
                  </div>
-                 <h4 className="text-xs font-bold uppercase tracking-widest">Quick Tip</h4>
-                 <p className="text-sm font-medium leading-relaxed">It's common to set reminders 14-30 days in advance for passports to allow enough renewal time.</p>
+                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Quick Tip</h4>
+                 <p className="text-sm font-semibold leading-relaxed">It's common to set reminders 14-30 days in advance for passports to allow enough renewal time.</p>
               </div>
-              <Zap size={100} className="absolute -right-8 -bottom-8 text-white/5 opacity-50 transition-transform duration-700" />
+              <Zap size={100} className="absolute -right-8 -bottom-8 text-white/5 opacity-50 transition-all duration-700 group-hover:scale-125 group-hover:rotate-12" />
            </div>
 
            <div className="p-6 card space-y-4 border-dashed">
