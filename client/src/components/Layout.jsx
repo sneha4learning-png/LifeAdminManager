@@ -107,9 +107,9 @@ const Layout = ({ children }) => {
           <div className="flex items-center gap-4 min-w-0">
              <button 
                onClick={() => setIsMobileMenuOpen(true)}
-               className="lg:hidden p-2 text-neutral-secondary hover:bg-neutral-bg rounded-lg shrink-0"
+               className="lg:hidden p-2.5 bg-neutral-bg border border-neutral-border text-brand-primary rounded-xl shadow-soft-sm shrink-0"
              >
-               <Menu size={20} />
+               <Menu size={22} />
              </button>
              <div className="flex items-center gap-3 min-w-0">
                 <div className="h-4 w-1 bg-brand-primary rounded-full shrink-0" />
@@ -155,6 +155,7 @@ const Layout = ({ children }) => {
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 p-2"><X size={24} /></button>
             </div>
             <nav className="flex-1 p-4 space-y-1">
+              <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 opacity-50">Vault Menu</p>
               {navItems.map((item) => (
                 <Link
                   key={item.path}
@@ -172,6 +173,28 @@ const Layout = ({ children }) => {
                 </Link>
               ))}
             </nav>
+
+            <div className="p-4 border-t border-white/5 space-y-4">
+               <div className="flex items-center gap-3 px-3 py-3 bg-white/5 rounded-xl border border-white/5 backdrop-blur-sm">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-white font-bold text-xs shrink-0 capitalize">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-white truncate capitalize">{user.name}</p>
+                    <p className="text-[10px] font-medium text-slate-400 truncate opacity-70">{user.role}</p>
+                  </div>
+               </div>
+               <button 
+                 onClick={() => {
+                   setIsMobileMenuOpen(false);
+                   handleLogout();
+                 }}
+                 className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 font-bold text-[11px] uppercase tracking-widest hover:text-danger-text transition-all group"
+               >
+                 <LogOut size={18} className="text-danger-text" />
+                 <span>Sign Out Vault</span>
+               </button>
+            </div>
           </div>
         </div>
       )}
