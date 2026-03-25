@@ -34,10 +34,13 @@ const Settings = () => {
           axios.get('/api/settings'),
           axios.get('/api/auth/me')
         ]);
-        setFormData({ targetEmail: settingsRes.data.targetEmail || '' });
+        setFormData({ 
+          targetEmail: settingsRes.data.targetEmail || '',
+          emailUser: settingsRes.data.emailUser || ''
+        });
         setProfileName(profileRes.data.name || '');
       } catch (err) {
-        console.error('Failed to synchronize vault', err);
+        console.error('Failed to load profile settings', err);
       } finally {
         setLoading(false);
       }
@@ -57,9 +60,9 @@ const Settings = () => {
         user.name = profileName;
         localStorage.setItem('user', JSON.stringify(user));
       }
-      setMessage({ type: 'success', text: 'Identity protocol updated. Your vault recognized your new profile name.' });
+      setMessage({ type: 'success', text: 'Profile updated successfully! Your new name is now active.' });
     } catch (err) {
-      setMessage({ type: 'error', text: 'Identity update failed. Check your connection.' });
+      setMessage({ type: 'error', text: 'Failed to update profile. Please check your internet connection and try again.' });
     } finally {
       setProfileSaving(false);
     }
@@ -71,21 +74,21 @@ const Settings = () => {
     setMessage(null);
     try {
       await axios.post('/api/settings', formData);
-      setMessage({ type: 'success', text: 'Alert destination updated. Notifications will now route to ' + formData.targetEmail });
+      setMessage({ type: 'success', text: 'Notification settings updated! We\'ll send reminders to ' + formData.targetEmail });
     } catch (err) {
-      setMessage({ type: 'error', text: 'Relay destination update failed.' });
+      setMessage({ type: 'error', text: 'Failed to update notification settings.' });
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="p-12 text-center text-neutral-secondary animate-pulse">Synchronizing secure vault with server...</div>;
+  if (loading) return <div className="p-12 text-center text-neutral-secondary animate-pulse">Loading your profile and settings...</div>;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20">
       <div>
-        <h1 className="heading-xl">Account & Notifications</h1>
-        <p className="text-sm text-neutral-secondary mt-1">Manage your vault identity and alert communication protocols.</p>
+        <h1 className="heading-xl">Profile & Notifications</h1>
+        <p className="text-sm text-neutral-secondary mt-1">Manage your personal information and how you receive alerts.</p>
       </div>
 
       {/* Identity Profile Section */}
@@ -95,7 +98,7 @@ const Settings = () => {
         </div>
         <div className="flex-1 space-y-4 w-full">
            <div className="space-y-1">
-             <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary ml-1">Identity Display Name</label>
+             <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary ml-1">Full Name</label>
              <div className="flex flex-col sm:flex-row items-center gap-3">
                <input 
                  type="text" 
@@ -131,8 +134,8 @@ const Settings = () => {
                     <Target size={18} />
                  </div>
                  <div>
-                    <h2 className="font-bold text-neutral-primary uppercase tracking-widest text-xs">Alert Routing Destination</h2>
-                    <p className="text-[10px] text-neutral-secondary mt-0.5">Where should we send your secure expiration notices?</p>
+                    <h2 className="font-bold text-neutral-primary uppercase tracking-widest text-xs">Notification Settings</h2>
+                    <p className="text-[10px] text-neutral-secondary mt-0.5">Where should we send your reminder emails?</p>
                  </div>
               </div>
 
@@ -140,11 +143,11 @@ const Settings = () => {
                  <div className="space-y-4">
                     <div className="space-y-2">
                        <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary ml-1 flex items-center gap-2">
-                         Preferred Recipient Email
+                         Email for Notifications
                          <div className="group relative">
                            <AlertCircle size={12} className="text-neutral-secondary/50 cursor-help" />
                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-neutral-primary text-white text-[9px] rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                             Use this to send alerts to a different inbox than your login email (e.g., work email).
+                             Enter the email address where you want to receive reminders.
                            </div>
                          </div>
                        </label>
@@ -161,7 +164,7 @@ const Settings = () => {
                        </div>
                     </div>
                     <p className="text-xs text-neutral-secondary leading-relaxed bg-neutral-bg p-4 rounded-lg border border-neutral-border italic">
-                       Professional SMTP Relay is enabled globally. You only need to verify your destination email above to begin receiving vault dispatches.
+                       Your reminder system is active. Just enter your preferred email address above to start receiving notifications.
                     </p>
                  </div>
               </div>
@@ -183,10 +186,10 @@ const Settings = () => {
                 disabled={saving}
                 className="btn btn-primary px-8 gap-2 bg-brand-primary text-white py-3 rounded-lg font-bold"
                >
-                 {saving ? 'Initializing Keys...' : (
+                 {saving ? 'Saving...' : (
                    <>
                      <Save size={18} />
-                     Save Secure Settings
+                     Save Settings
                    </>
                  )}
                </button>
@@ -201,9 +204,9 @@ const Settings = () => {
                     <ShieldCheck size={24} />
                  </div>
                  <div>
-                    <h3 className="text-lg font-bold uppercase tracking-tight">Security Protocol</h3>
+                    <h3 className="text-lg font-bold uppercase tracking-tight">Privacy & Security</h3>
                     <p className="text-xs text-white/70 mt-2 leading-relaxed font-medium">
-                       These credentials are used only for local outbound relay and are never shared with external trackers.
+                       Your information is kept private and secure. We never share your data with third parties.
                     </p>
                  </div>
               </div>
@@ -211,12 +214,12 @@ const Settings = () => {
            </div>
 
            <div className="card p-6 space-y-4">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary">Status Monitor</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary">System Status</h3>
               <div className="space-y-4">
                  {[
-                   { label: 'SMTP Relay', status: formData.emailUser ? 'Active' : 'Offline', ok: !!formData.emailUser },
+                   { label: 'Email System', status: formData.emailUser ? 'Active' : 'Offline', ok: !!formData.emailUser },
                    { label: 'Encryption', status: 'Operational', ok: true },
-                   { label: 'Target Route', status: formData.targetEmail ? 'Verifed' : 'Unset', ok: !!formData.targetEmail }
+                   { label: 'Recipient Email', status: formData.targetEmail ? 'Verified' : 'Unset', ok: !!formData.targetEmail }
                  ].map((item, i) => (
                    <div key={i} className="flex items-center justify-between">
                       <span className="text-xs font-medium text-neutral-primary">{item.label}</span>

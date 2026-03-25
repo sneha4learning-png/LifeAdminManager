@@ -6,12 +6,25 @@ const User = require('../models/User');
  */
 exports.getSettings = async (req, res) => {
   try {
+    const isConnected = require('mongoose').connection.readyState === 1;
+    if (!isConnected) {
+        return res.status(200).json({
+            targetEmail: req.user.email,
+            emailUser: process.env.EMAIL_USER
+        });
+    }
+
     const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+        return res.status(200).json({
+            targetEmail: req.user.email,
+            emailUser: process.env.EMAIL_USER
+        });
+    }
 
     res.status(200).json({
       targetEmail: user.email,
-      emailUser: process.env.EMAIL_USER // Show if SMTP is configured
+      emailUser: process.env.EMAIL_USER
     });
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving settings', error: error.message });

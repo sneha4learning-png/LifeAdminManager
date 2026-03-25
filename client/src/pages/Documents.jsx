@@ -68,7 +68,7 @@ const Documents = () => {
     <div className="flex items-center justify-center p-20 animate-pulse">
       <div className="flex flex-col items-center gap-4">
         <Activity size={32} className="text-brand-primary animate-spin" />
-        <p className="text-neutral-secondary font-medium text-sm">Accessing Vault Records...</p>
+        <p className="text-neutral-secondary font-medium text-sm">Loading your documents...</p>
       </div>
     </div>
   );
@@ -79,7 +79,7 @@ const Documents = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-neutral-border">
         <div>
           <h1 className="heading-xl">My Documents</h1>
-          <p className="text-sm text-neutral-secondary mt-1">Manage and organize all your vault records in one place.</p>
+          <p className="text-sm text-neutral-secondary mt-1">All your important documents in one secure place.</p>
         </div>
         <Link to="/add-document" className="btn btn-primary gap-2">
            <PlusCircle size={18} />
@@ -182,7 +182,7 @@ const Documents = () => {
                           "text-xs font-bold uppercase tracking-wider",
                           doc.status === 'Overdue' ? 'text-danger-text' : (doc.status === 'Upcoming' ? 'text-warning-text' : 'text-success-text')
                        )}>{doc.status}</p>
-                       <p className="text-[10px] text-neutral-secondary">Status Monitoring</p>
+                       <p className="text-[10px] text-neutral-secondary">Document Status</p>
                     </div>
                     <div className="flex items-center gap-2 opacity-100 transition-all">
                        <button onClick={() => handleDelete(doc._id)} className="p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-all" title="Delete"><Trash2 size={18} /></button>

@@ -19,7 +19,7 @@ const Logo = ({ className, light = false }) => {
         <ShieldCheck size={22} className="stroke-[2.5px]" />
       </div>
       <div className="flex flex-col">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 whitespace-nowrap">
           <span className={cn(
             "text-2xl font-black leading-none tracking-tight",
             light 
@@ -32,14 +32,14 @@ const Logo = ({ className, light = false }) => {
             "text-2xl font-black leading-none tracking-tight",
             light ? "text-white/80" : "text-neutral-primary"
           )}>
-            Admin Project
+            Admin
           </span>
         </div>
         <span className={cn(
           "text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5 leading-none opacity-60",
           light ? "text-white/40" : "text-neutral-secondary"
         )}>
-          Master Secure Vault
+          Your Personal Manager
         </span>
       </div>
 

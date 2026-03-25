@@ -61,20 +61,20 @@ const Register = () => {
             
             <div className="mt-24 space-y-10">
                <h2 className="text-5xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight">
-                 Secure Your <br />
-                 <span className="text-white underline decoration-white/30 underline-offset-8">Digital Assets.</span>
+                 Take Control of <br />
+                 <span className="text-white underline decoration-white/30 underline-offset-8">Your Tasks.</span>
                </h2>
                <p className="text-xl text-white/80 font-medium max-w-lg leading-relaxed">
-                 Join thousands who trust this platform to manage their life administration efficiently and securely.
+                 Manage your documents and deadlines in one secure place.
                </p>
             </div>
 
             <div className="mt-auto grid grid-cols-2 gap-8">
                {[
-                 { icon: ShieldCheck, title: "Zero Knowledge", text: "End-to-end security" },
-                 { icon: Zap, title: "Smart Alerts", text: "Predictive tracking" },
-                 { icon: CheckCircle2, title: "Audit Ready", text: "Compliance logs" },
-                 { icon: Clock, title: "Time Saver", text: "Automated tasks" }
+                 { icon: ShieldCheck, title: "Fully Secure", text: "End-to-end security" },
+                 { icon: Zap, title: "Smart Reminders", text: "Predictive tracking" },
+                 { icon: CheckCircle2, title: "Track Everything", text: "Activity history" },
+                 { icon: Clock, title: "Save Time", text: "Automated tasks" }
                ].map((item, i) => (
                  <div key={i} className="flex flex-col gap-3 group/item">
                     <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white group-hover/item:bg-white group-hover/item:text-brand-primary transition-all duration-300">
@@ -89,9 +89,9 @@ const Register = () => {
             </div>
 
             <div className="relative z-10 flex items-center gap-6 text-white/40 text-[10px] font-bold uppercase tracking-[0.4em] border-t border-white/10 pt-8 mt-12">
-               <span>Production v2.0.0</span>
+               <span>Ready for You</span>
                <div className="w-2 h-2 rounded-full bg-success-bg shadow-sm" />
-               <span>Gateway Open</span>
+               <span>Everything Online</span>
             </div>
          </div>
       </div>
@@ -104,10 +104,10 @@ const Register = () => {
              <div className="lg:hidden mb-10">
                 <Logo className="scale-125 origin-left" light={false} />
              </div>
-             <h1 className="text-3xl font-bold text-neutral-primary tracking-tight">
-               Create <span className="text-brand-primary">Vault</span>
-             </h1>
-             <p className="text-neutral-secondary font-medium text-sm">Initialize your secure document repository</p>
+              <h1 className="text-3xl font-bold text-neutral-primary tracking-tight">
+                Create <span className="text-brand-primary">Account</span>
+              </h1>
+              <p className="text-neutral-secondary font-medium text-sm">Get started with your personal manager</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -149,7 +149,7 @@ const Register = () => {
 
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary ml-1">Secure Password</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-secondary ml-1">Password</label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-secondary/50 group-focus-within:text-brand-primary transition-colors" size={20} />
                   <input 
@@ -182,13 +182,13 @@ const Register = () => {
               disabled={loading}
               className="btn btn-primary w-full py-3.5 gap-3 bg-brand-primary text-white rounded-lg font-bold flex items-center justify-center transition-all hover:bg-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating Vault...' : 'Create Account'}
+              {loading ? 'Setting up...' : 'Create Account'}
               {!loading && <ArrowRight size={20} />}
             </button>
           </form>
 
           <p className="text-center font-bold text-neutral-secondary text-sm">
-            Already have a key? <Link to="/login" className="text-brand-primary hover:underline underline-offset-4 font-bold ml-1">Authorize Access</Link>
+            Already have an account? <Link to="/login" className="text-brand-primary hover:underline underline-offset-4 font-bold ml-1">Sign In</Link>
           </p>
         </div>
       </div>

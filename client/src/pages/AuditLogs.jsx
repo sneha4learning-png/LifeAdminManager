@@ -54,8 +54,8 @@ const AuditLogs = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-border">
         <div>
-          <h1 className="heading-xl">Audit <span className="text-brand-primary">Protocol</span></h1>
-          <p className="text-sm text-neutral-secondary mt-1">Real-time immutable history of vault interactions.</p>
+          <h1 className="heading-xl">Activity <span className="text-brand-primary">History</span></h1>
+          <p className="text-sm text-neutral-secondary mt-1">A complete record of all actions taken in your account.</p>
         </div>
         <button 
           onClick={fetchLogs}
@@ -68,7 +68,7 @@ const AuditLogs = () => {
 
       <div className="card overflow-hidden">
         <div className="p-4 bg-neutral-bg/50 border-b border-neutral-border flex items-center justify-between">
-           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-secondary">Recent Protocol Entries</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-secondary">Recent Activity</span>
            <span className="text-[10px] font-bold text-success-text flex items-center gap-1.5">
              <div className="w-1.5 h-1.5 rounded-full bg-success-text animate-pulse" />
              Active Tracking
@@ -103,8 +103,8 @@ const AuditLogs = () => {
                <div className="w-16 h-16 bg-neutral-bg rounded-2xl flex items-center justify-center text-neutral-secondary mb-4 opacity-30">
                   <History size={32} />
                </div>
-               <h3 className="text-sm font-bold text-neutral-primary">Protocol Data Empty</h3>
-               <p className="text-xs text-neutral-secondary mt-1">Activity logs will appear here once you interact with your vault.</p>
+               <h3 className="text-sm font-bold text-neutral-primary">History is empty</h3>
+               <p className="text-xs text-neutral-secondary mt-1">Activity logs will appear here once you start using your account.</p>
             </div>
           )}
         </div>
@@ -113,8 +113,8 @@ const AuditLogs = () => {
       <div className="p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-xl flex items-start gap-4">
          <ShieldCheck className="text-brand-primary mt-1 shrink-0" size={20} />
          <div>
-            <h4 className="text-xs font-bold text-brand-primary uppercase tracking-widest">Protocol Integrity</h4>
-            <p className="text-xs text-neutral-secondary mt-1 leading-relaxed">Each entry is timestamped and cryptographically linked to your session. These logs are intended for security auditing and cannot be modified manually.</p>
+            <h4 className="text-xs font-bold text-brand-primary uppercase tracking-widest">Security Records</h4>
+            <p className="text-xs text-neutral-secondary mt-1 leading-relaxed">Every action is recorded with a timestamp for your security. These records cannot be deleted or changed.</p>
          </div>
       </div>
     </div>

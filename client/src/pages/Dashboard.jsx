@@ -66,7 +66,7 @@ const Dashboard = () => {
     <div className="flex items-center justify-center p-12">
       <div className="flex flex-col items-center gap-3">
         <Activity size={32} className="text-brand-primary animate-spin" />
-        <p className="text-neutral-secondary font-medium text-sm">Syncing Vault & Protocol...</p>
+        <p className="text-neutral-secondary font-medium text-sm">Loading your dashboard...</p>
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ const Dashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-border">
         <div>
           <h1 className="heading-xl">Welcome back, <span className="text-brand-primary capitalize">{JSON.parse(localStorage.getItem('user'))?.name || 'User'}</span></h1>
-          <p className="text-sm text-neutral-secondary mt-1">Easily monitor and manage your secure vault records.</p>
+          <p className="text-sm text-neutral-secondary mt-1">Easily manage your documents and reminders in one place.</p>
         </div>
         <Link to="/add-document" className="btn btn-primary gap-2">
           <PlusCircle size={18} />
@@ -111,11 +111,11 @@ const Dashboard = () => {
            <div className="bg-brand-primary rounded-xl p-6 text-white overflow-hidden relative group shadow-soft-lg">
               <div className="relative z-10 flex flex-col h-full justify-between gap-6">
                  <div>
-                    <h3 className="text-lg font-bold">Protocol Sync</h3>
-                    <p className="text-sm text-white/80 mt-2 leading-relaxed">Your secure vault is synced with the latest audit protocol.</p>
+                    <h3 className="text-lg font-bold">System Status</h3>
+                    <p className="text-sm text-white/80 mt-2 leading-relaxed">Your information is safe and securely backed up.</p>
                  </div>
                  <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest">
-                    <span>Status: Optimized</span>
+                    <span>Status: Secure</span>
                     <div className="w-2 h-2 rounded-full bg-success-bg animate-pulse" />
                  </div>
               </div>
@@ -125,7 +125,7 @@ const Dashboard = () => {
            <div className="space-y-4">
               <h3 className="text-xs font-bold text-neutral-secondary uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck size={14} className="text-brand-primary" />
-                Today's Agenda
+                Your Reminders
               </h3>
               <div className="space-y-3">
                  {urgentTasks.length > 0 ? urgentTasks.map(task => (
@@ -173,7 +173,7 @@ const Dashboard = () => {
            <div className="flex items-center justify-between card p-4">
               <div className="flex items-center gap-3 flex-1">
                  <Search size={18} className="text-neutral-secondary" />
-                 <input type="text" placeholder="Search your vault..." className="text-sm text-neutral-primary bg-transparent outline-none w-full placeholder:text-neutral-secondary" />
+                 <input type="text" placeholder="Search your documents..." className="text-sm text-neutral-primary bg-transparent outline-none w-full placeholder:text-neutral-secondary" />
               </div>
               <Link to="/documents" className="text-xs font-bold text-brand-primary hover:underline whitespace-nowrap ml-4">View All</Link>
            </div>

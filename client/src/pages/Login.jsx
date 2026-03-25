@@ -65,17 +65,17 @@ const Login = () => {
             
             <div className="mt-auto mb-auto space-y-8">
                <h2 className="text-4xl xl:text-5xl font-bold text-white leading-tight tracking-tight">
-                 Manage Your <br />
-                 <span className="text-white underline decoration-white/30 underline-offset-8">Critical Documents</span>
+                 Simplify Your <br />
+                 <span className="text-white underline decoration-white/30 underline-offset-8">Life Admin</span>
                </h2>
                <p className="text-lg text-white/80 font-medium max-w-sm leading-relaxed">
-                 The enterprise solution for tracking renewals, expirations, and essential records with automated smart alerts.
+                 The easiest way to track your documents, renewals, and daily tasks with smart reminders.
                </p>
                
                <div className="grid grid-cols-1 gap-6 pt-8">
                  {[
-                   { icon: ShieldCheck, title: "Secure Storage", text: "Encrypted data protection" },
-                   { icon: Clock, title: "Smart Alerts", text: "Automated renewal reminders" }
+                   { icon: ShieldCheck, title: "Private & Secure", text: "Your data is always safe" },
+                   { icon: Clock, title: "Smart Reminders", text: "Never miss a deadline again" }
                  ].map((item, i) => (
                    <div key={i} className="flex items-center gap-5">
                       <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white">
@@ -91,7 +91,7 @@ const Login = () => {
             </div>
 
             <div className="relative z-10 flex items-center gap-4 text-white/40 text-[10px] font-bold uppercase tracking-[0.4em] pt-8 border-t border-white/10">
-               <span>Corporate Standard 2026</span>
+               <span>Designed for You 2026</span>
                <div className="w-2 h-2 rounded-full bg-success-bg shadow-sm" />
             </div>
          </div>
@@ -106,9 +106,9 @@ const Login = () => {
                 <Logo className="scale-125 origin-left" light={false} />
              </div>
              <h1 className="text-3xl font-bold text-neutral-primary tracking-tight">
-               Welcome <span className="text-brand-primary">Back</span>
+               Welcome <span className="text-brand-primary">Back!</span>
              </h1>
-              <p className="text-neutral-secondary font-medium text-sm">Sign in to your secure vault</p>
+              <p className="text-neutral-secondary font-medium text-sm">Sign in to access your dashboard</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -161,7 +161,7 @@ const Login = () => {
               disabled={loading}
               className="btn btn-primary w-full py-3.5 gap-3"
             >
-              {loading ? 'Logging in...' : 'Sign In'}
+              {loading ? 'Signing in...' : 'Sign In'}
               {!loading && <ArrowRight size={18} />}
             </button>
           </form>
@@ -173,7 +173,7 @@ const Login = () => {
               className="w-full py-3 rounded-lg border border-neutral-border bg-neutral-card text-neutral-primary font-bold text-[11px] flex items-center justify-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition-all shadow-soft-md uppercase tracking-widest"
              >
                <Zap size={14} className="text-brand-primary" fill="currentColor" />
-               Developer Quick Access
+               Try Sample Account
              </button>
              
              <p className="text-center font-bold text-neutral-secondary text-xs tracking-wide">
