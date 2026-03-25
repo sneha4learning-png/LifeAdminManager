@@ -14,20 +14,22 @@ const startTaskScheduler = () => {
       const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
                           now.getMinutes().toString().padStart(2, '0');
 
+      console.log(`[Task Scheduler Heartbeat] ${now.toISOString()} - CurrentTime: ${currentTime}`);
+
       // Find tasks that are due but haven't been notified yet
-// Support both new precision (reminderAt) and legacy (dueDate + dueTime)
-const tasks = await Task.find({
-  completed: false,
-  reminderSent: false,
-  $or: [
-    { reminderAt: { $lte: now } },
-    { 
-       reminderAt: { $exists: false },
-       dueDate: { $lte: now },
-       dueTime: { $lte: currentTime }
-    }
-  ]
-});
+      // Support both new precision (reminderAt) and legacy (dueDate + dueTime)
+      const tasks = await Task.find({
+        completed: false,
+        reminderSent: false,
+        $or: [
+          { reminderAt: { $lte: now } },
+          { 
+             reminderAt: { $exists: false },
+             dueDate: { $lte: now },
+             dueTime: { $lte: currentTime }
+          }
+        ]
+      });
 
 if (tasks.length > 0) {
   console.log(`[Task Scheduler] Found ${tasks.length} pending reminders...`);

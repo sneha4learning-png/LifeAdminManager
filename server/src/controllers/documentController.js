@@ -98,16 +98,16 @@ exports.testReminder = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const recipient = user.email;
+    const recipient = user.targetEmail || user.email;
     const result = await sendReminderEmail(recipient, document, user.name);
 
     if (result.success) {
-      res.status(200).json({ message: `Success! A test reminder has been dispatched to ${recipient}. Please check your inbox shortly.` });
+      res.status(200).json({ message: `Success! A test reminder has been dispatched to ${recipient}.` });
     } else {
-      res.status(500).json({ message: 'Relay failed', error: result.error });
+      res.status(500).json({ message: 'Email service failure: ' + (result.error || 'Unknown error') });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error sending reminder', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
 

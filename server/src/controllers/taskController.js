@@ -70,6 +70,9 @@ exports.toggleComplete = async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
     
     task.completed = !task.completed;
+    if (!task.completed) {
+      task.reminderSent = false;
+    }
     await task.save();
     
     // Audit Log: Task Toggled
@@ -155,13 +158,17 @@ exports.testTaskReminder = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const { logAction } = require('../utils/auditLogger');
-    await sendTaskEmail(user.email, task, user.name);
+    const recipient = user.targetEmail || user.email;
+    const result = await sendTaskEmail(recipient, task, user.name);
     
     // Audit Log: Task Test Sent
-    await logAction(req.user.id, 'TEST_TASK_REMINDER', `Manual reminder triggered for: ${task.title}`, req);
+    await logAction(req.user.id, 'TEST_TASK_REMINDER', `Manual reminder triggered for: ${task.title} to ${recipient}`, req);
     
-    res.status(200).json({ message: 'Success! Task reminder sent to your registered email.' });
+    if (result && result.error) {
+       return res.status(500).json({ message: 'Email service error: ' + result.error });
+    }
+
+    res.status(200).json({ message: `Success! Task reminder sent to ${recipient}.` });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

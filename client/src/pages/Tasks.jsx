@@ -94,9 +94,12 @@ const Tasks = () => {
     try {
       if (!newTask.dueDate || !newTask.dueTime) throw new Error("Please select both a date and a time.");
       
-      const reminderDate = new Date(newTask.dueDate);
-      const [hours, mins] = newTask.dueTime.split(':');
-      reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+      // CRITICAL FIX: Ensure reminder is created in LOCAL BROWSER TIME.
+      // String parsing YYYY-MM-DD usually defaults to UTC 00:00, which offsets the reminder.
+      const [year, month, day] = newTask.dueDate.split('-').map(Number);
+      const [hours, mins] = newTask.dueTime.split(':').map(Number);
+      // Month is 0-indexed in JS Date constructor (year, monthIndex, day, hours, mins)
+      const reminderDate = new Date(year, month - 1, day, hours, mins, 0, 0);
       
       const res = await axios.post('/api/tasks', { ...newTask, reminderAt: reminderDate.toISOString() });
       setTasks([...tasks, res.data]);
@@ -119,9 +122,9 @@ const Tasks = () => {
     try {
       if (!editingTask.dueDate || !editingTask.dueTime) throw new Error("Please select both a date and a time.");
       
-      const reminderDate = new Date(editingTask.dueDate);
-      const [hours, mins] = editingTask.dueTime.split(':');
-      reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+      const [year, month, day] = editingTask.dueDate.split('-').map(Number);
+      const [hours, mins] = editingTask.dueTime.split(':').map(Number);
+      const reminderDate = new Date(year, month - 1, day, hours, mins, 0, 0);
 
       const res = await axios.put(`/api/tasks/${editingTask._id}`, { 
         ...editingTask, 
@@ -284,7 +287,8 @@ const Tasks = () => {
                     const res = await axios.post(`/api/tasks/${task._id}/test-reminder`);
                     alert(res.data.message);
                   } catch (err) {
-                    alert('Failed to send test email. Check your settings.');
+                    const errorMsg = err.response?.data?.message || 'Failed to connect to email server. Try again.';
+                    alert('Vault Error: ' + errorMsg);
                   }
                 }}
                 className="px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white"

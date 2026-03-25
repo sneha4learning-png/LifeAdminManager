@@ -43,7 +43,8 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
         alert(res.data.message || 'Check your inbox! Your test reminder is on its way.');
       }
     } catch (err) {
-      alert('We encountered an issue sending the reminder. Please verify your email configuration in settings.');
+      const errorMsg = err.response?.data?.message || 'Check your internet connection and try again.';
+      alert('Vault Error: ' + errorMsg);
     }
   };
 
