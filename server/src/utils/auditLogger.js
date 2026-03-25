@@ -2,6 +2,12 @@ const AuditLog = require('../models/AuditLog');
 
 const logAction = async (userId, action, details, req = null) => {
   try {
+    const isConnected = require('mongoose').connection.readyState === 1;
+    if (!isConnected) {
+        console.log(`[Audit Log-Local] ${action}: ${details}`);
+        return;
+    }
+
     const log = new AuditLog({
       userId,
       action,
