@@ -50,7 +50,9 @@ const Layout = ({ children }) => {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-neutral-card border-r border-neutral-border z-20 transition-colors duration-200">
         <div className="p-6">
-           <Logo className="scale-90 origin-left" />
+           <Link to="/dashboard" className="hover:opacity-80 transition-opacity">
+              <Logo className="scale-90 origin-left" />
+           </Link>
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
@@ -144,7 +146,9 @@ const Layout = ({ children }) => {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
           <div className="fixed inset-y-0 left-0 w-64 bg-neutral-card shadow-soft-lg flex flex-col">
             <div className="p-6 flex items-center justify-between border-b border-neutral-border">
-              <Logo className="scale-75 origin-left" />
+              <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                <Logo className="scale-75 origin-left" />
+              </Link>
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-neutral-secondary p-2"><X size={24} /></button>
             </div>
             <nav className="flex-1 p-4 space-y-1">

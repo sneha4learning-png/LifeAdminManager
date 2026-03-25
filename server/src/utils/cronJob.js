@@ -16,7 +16,9 @@ const scheduleReminders = () => {
       today.setHours(0, 0, 0, 0);
 
       const documents = await Document.find({ 
-        expiryDate: { $gt: today } 
+        expiryDate: { $gt: today },
+        completed: false,
+        reminderSent: false
       });
 
       for (const doc of documents) {
@@ -30,13 +32,23 @@ const scheduleReminders = () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         /**
-         * Logic:
-         * 1. Send if document is exactly 3 days away (Standardized reminder)
-         * 2. Send if it matches the user's specific custom threshold (if set)
+         * Enhanced Proactive Logic:
+         * Fire if document is within the 3-day critical window (3, 2, or 1 days away)
+         * OR matches exactly the user's custom threshold.
          */
-        if (diffDays === 3 || diffDays === doc.reminderDaysBefore) {
-          console.log(`[Scheduler] Dispatching automated alert for "${doc.name}" to ${user.email}`);
-          await sendReminderEmail(user.email, doc, user.name);
+        const isCriticalWindow = diffDays <= 3 && diffDays > 0;
+        const matchesCustomThreshold = diffDays === doc.reminderDaysBefore;
+
+        if (isCriticalWindow || matchesCustomThreshold) {
+          console.log(`[Scheduler] Dispatching Vault Alert for "${doc.name}" to ${user.email} (${diffDays} days remaining)`);
+          
+          const recipient = user.targetEmail || user.email;
+          const result = await sendReminderEmail(recipient, doc, user.name);
+          
+          if (result.success) {
+            doc.reminderSent = true;
+            await doc.save();
+          }
         }
       }
     } catch (error) {

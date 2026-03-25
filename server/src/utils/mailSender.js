@@ -9,11 +9,11 @@ const sendMail = async ({ to, subject, html }) => {
   try {
     // 🛡️ SOLUTION A: Official Resend SDK (Primary)
     if (process.env.RESEND_API_KEY) {
-      console.log('[Life Admin Project] Dispatching via Official Resend SDK...');
+      console.log('[Life Admin Manager] Dispatching via Official Resend SDK...');
       const resend = new Resend(process.env.RESEND_API_KEY);
       
       const { data, error } = await resend.emails.send({
-        from: 'Life Admin Project <onboarding@resend.dev>',
+        from: 'Life Admin Manager <onboarding@resend.dev>',
         to: [to],
         subject: `🔔 [NEW] ${subject}`, // Marked as NEW to avoid Gmail clipping
         html: html,
@@ -33,7 +33,7 @@ const sendMail = async ({ to, subject, html }) => {
     }
 
     // 🛡️ SOLUTION B: Traditional SMTP Fallback
-    console.log('[Life Admin Project] Falling back to SMTP...');
+    console.log('[Life Admin Manager] Falling back to SMTP...');
     const transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
@@ -44,7 +44,7 @@ const sendMail = async ({ to, subject, html }) => {
     });
 
     const info = await transporter.sendMail({
-      from: `"Life Admin Project" <${process.env.EMAIL_USER}>`,
+      from: `"Life Admin Manager" <${process.env.EMAIL_USER}>`,
       to, 
       subject: `🔔 [NEW] ${subject}`,
       html

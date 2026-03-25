@@ -64,7 +64,7 @@ const sendTaskReminderEmail = async (userEmail, task, userName = 'Valued Member'
         <tr>
           <td style="padding: 30px; text-align: center; font-size: 11px; color: #94a3b8; background-color: #f8fafc; border-top: 1px solid #f1f5f9;">
             <p style="margin-bottom: 5px;">🛡️ Safe-Access ID: <span style="color: #64748b; font-weight: 600;">${uniqueId}</span></p>
-            <p>© ${new Date().getFullYear()} Life Admin Project • Your Private Data Manager</p>
+            <p>© ${new Date().getFullYear()} Life Admin Manager • Your Private Data Manager</p>
           </td>
         </tr>
       </table>

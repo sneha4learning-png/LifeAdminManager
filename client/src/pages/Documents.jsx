@@ -296,6 +296,9 @@ const Documents = () => {
                   value={editingDoc.reminderDaysBefore}
                   onChange={e => setEditingDoc({...editingDoc, reminderDaysBefore: e.target.value})}
                 />
+                <p className="text-[10px] text-neutral-secondary/60 mt-2 ml-1 leading-relaxed">
+                  Set an earlier warning (e.g. 14 or 30 days) or keep the standard 3-day reminder for critical entries.
+                </p>
               </div>
 
               <div className="flex gap-3 pt-2">
