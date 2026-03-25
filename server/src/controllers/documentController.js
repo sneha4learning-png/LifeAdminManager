@@ -84,6 +84,9 @@ exports.deleteDocument = async (req, res) => {
     if (!isConnected) {
         return res.status(200).json({ message: 'Record removed locally', id: req.params.id });
     }
+    if (req.params.id.startsWith('local_')) {
+        return res.status(200).json({ message: 'Local record removed from vault cache', id: req.params.id });
+    }
     const document = await Document.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     if (!document) return res.status(404).json({ message: 'Record not found or unauthorized' });
     res.status(200).json({ message: 'Record removed successfully', id: req.params.id });

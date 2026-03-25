@@ -71,11 +71,11 @@ const Documents = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this document?')) {
+      setDocuments(documents.filter(d => d._id !== id));
       try {
         await axios.delete(`/api/documents/${id}`);
-        fetchDocs();
       } catch (err) {
-        alert('Failed to delete document');
+        console.error('Remote delete failed, record kept locally:', err);
       }
     }
   };

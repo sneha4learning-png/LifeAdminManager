@@ -92,12 +92,16 @@ exports.deleteTask = async (req, res) => {
     if (!isConnected) {
         return res.status(200).json({ message: 'Task deleted locally' });
     }
-    const taskTitle = (await Task.findById(req.params.id))?.title || 'Unknown';
+    // Safeguard for legacy local_ IDs
+    if (req.params.id.startsWith('local_')) {
+      return res.status(200).json({ message: 'Local task cleared from vault cache' });
+    }
+
     const task = await Task.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
-    if (!task) return res.status(404).json({ message: 'Task not found' });
+    if (!task) return res.status(404).json({ message: 'Reminder not found in vault core' });
     
     // Audit Log: Task Deleted
-    await logAction(req.user.id, 'DELETE_TASK', `Reminder deleted: ${taskTitle}`, req);
+    await logAction(req.user.id, 'DELETE_TASK', `Reminder permanent deletion: ${task.title}`, req);
     
     res.status(200).json({ message: 'Task deleted successfully' });
   } catch (error) {

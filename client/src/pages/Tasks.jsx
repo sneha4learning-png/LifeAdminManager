@@ -79,11 +79,11 @@ const Tasks = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this reminder?')) return;
+    setTasks(tasks.filter(t => t._id !== id));
     try {
       await axios.delete(`/api/tasks/${id}`);
-      setTasks(tasks.filter(t => t._id !== id));
     } catch (err) {
-      console.error('Delete failed', err);
+      console.error('Remote sync failed, task cleared locally:', err);
     }
   };
 
