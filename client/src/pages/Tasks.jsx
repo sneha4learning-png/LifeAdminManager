@@ -175,7 +175,7 @@ const Tasks = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-neutral-border">
         <div>
-          <h1 className="heading-xl">My <span className="text-brand-primary">Reminders</span></h1>
+          <h1 className="heading-xl">My <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">Reminders</span></h1>
           <p className="text-sm text-neutral-secondary mt-1">Manage your daily tasks and life events securely.</p>
         </div>
         <button 

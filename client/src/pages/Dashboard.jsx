@@ -76,7 +76,7 @@ const Dashboard = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-border">
         <div>
-          <h1 className="heading-xl">Welcome back, <span className="text-brand-primary capitalize">{JSON.parse(localStorage.getItem('user'))?.name || 'User'}</span></h1>
+          <h1 className="heading-xl">Welcome back, <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent capitalize">{JSON.parse(localStorage.getItem('user'))?.name || 'User'}</span></h1>
           <p className="text-sm text-neutral-secondary mt-1">Easily manage your documents and reminders in one place.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -114,15 +114,15 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Agenda Column */}
         <div className="lg:col-span-1 space-y-6">
-           <div className="bg-brand-primary rounded-xl p-6 text-white overflow-hidden relative group shadow-soft-lg">
+           <div className="bg-gradient-to-br from-[#14B8A6] to-[#F43F5E] rounded-xl p-6 text-white overflow-hidden relative group shadow-soft-lg">
               <div className="relative z-10 flex flex-col h-full justify-between gap-6">
                  <div>
-                    <h3 className="text-lg font-bold">System Status</h3>
-                    <p className="text-sm text-white/80 mt-2 leading-relaxed">Your information is safe and securely backed up.</p>
+                    <h3 className="text-lg font-bold">Vault Security</h3>
+                    <p className="text-sm text-white/90 mt-2 leading-relaxed font-medium">Your private documents are encrypted and safe.</p>
                  </div>
-                 <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-widest">
-                    <span>Status: Secure</span>
-                    <div className="w-2 h-2 rounded-full bg-success-bg animate-pulse" />
+                 <div className="flex items-center gap-2 text-white font-black text-[10px] uppercase tracking-[0.2em] bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-md border border-white/20">
+                    <span>Active Protection</span>
+                    <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
                  </div>
               </div>
               <ShieldCheck className="absolute -right-8 -bottom-8 w-24 h-24 text-white/5 group-hover:scale-110 transition-transform duration-700" />
