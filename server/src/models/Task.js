@@ -46,14 +46,13 @@ const taskSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Normalize the reminder date time from separate inputs before saving
-taskSchema.pre('save', function(next) {
+taskSchema.pre('save', function() {
   if (this.dueDate && this.dueTime) {
     const dt = new Date(this.dueDate);
     const [hours, mins] = this.dueTime.split(':');
     dt.setHours(parseInt(hours), parseInt(mins), 0, 0);
     this.reminderAt = dt;
   }
-  next();
 });
 
 module.exports = mongoose.model('Task', taskSchema);
