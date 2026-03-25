@@ -73,11 +73,28 @@ const Tasks = () => {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
+    
+    // Validation: Prevent past times for today's date
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (newTask.dueDate === todayStr) {
+      const currentTime = new Date().toTimeString().slice(0, 5);
+      if (newTask.dueTime < currentTime) {
+        alert("The selected time has already passed for today. Please pick a future time.");
+        return;
+      }
+    }
+
     try {
       const res = await axios.post('/api/tasks', newTask);
       setTasks([...tasks, res.data]);
       setShowAddModal(false);
-      setNewTask({ title: '', dueDate: '', priority: 'Medium', category: 'General' });
+      setNewTask({ 
+        title: '', 
+        dueDate: new Date().toISOString().split('T')[0], 
+        dueTime: '09:00',
+        priority: 'Medium', 
+        category: 'General' 
+      });
     } catch (err) {
       console.error('Add failed', err);
     }
@@ -299,9 +316,13 @@ const Tasks = () => {
                   <input 
                     type="date" 
                     required
+                    min={new Date().toISOString().split('T')[0]}
                     className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
                     value={newTask.dueDate}
-                    onChange={e => setNewTask({...newTask, dueDate: e.target.value})}
+                    onChange={e => {
+                      const selectedDate = e.target.value;
+                      setNewTask({...newTask, dueDate: selectedDate});
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
@@ -309,6 +330,7 @@ const Tasks = () => {
                   <input 
                     type="time" 
                     required
+                    min={newTask.dueDate === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                     className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
                     value={newTask.dueTime}
                     onChange={e => setNewTask({...newTask, dueTime: e.target.value})}
