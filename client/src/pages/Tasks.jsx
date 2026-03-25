@@ -196,7 +196,21 @@ const Tasks = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end font-sans">
+              <button 
+                onClick={async () => {
+                  try {
+                    const res = await axios.post(`/api/tasks/${task._id}/test-reminder`);
+                    alert(res.data.message);
+                  } catch (err) {
+                    alert('Failed to send test email. Check your settings.');
+                  }
+                }}
+                className="px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white"
+                title="Send Test Email"
+              >
+                Test Email
+              </button>
               <button 
                 onClick={() => handleToggle(task._id)}
                 className={cn(

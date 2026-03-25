@@ -140,3 +140,25 @@ exports.rescheduleTask = async (req, res) => {
     res.status(500).send('Reschedule failed');
   }
 };
+
+exports.testTaskReminder = async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const sendTaskEmail = require('../utils/taskReminderEmail');
+    const task = await Task.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!task) return res.status(404).json({ message: 'Reminder not found' });
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const { logAction } = require('../utils/auditLogger');
+    await sendTaskEmail(user.email, task, user.name);
+    
+    // Audit Log: Task Test Sent
+    await logAction(req.user.id, 'TEST_TASK_REMINDER', `Manual reminder triggered for: ${task.title}`, req);
+    
+    res.status(200).json({ message: 'Success! Task reminder sent to your registered email.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

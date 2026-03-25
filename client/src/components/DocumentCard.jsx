@@ -70,13 +70,6 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
           </div>
           <div className="flex items-center gap-1">
               <button 
-                onClick={handleTestReminder}
-                className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors"
-                title="Test Email Reminder"
-              >
-                <BellRing size={14} />
-              </button>
-              <button 
                 onClick={(e) => { e.stopPropagation(); onEdit?.(document); }}
                 className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors"
                 title="Edit"
@@ -112,20 +105,29 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
        </div>
 
        {/* Action Bar - Fixed Responsive Issues */}
-       <div className="p-3 bg-neutral-bg/30 border-t border-neutral-border grid grid-cols-2 gap-2 mt-auto">
+       <div className="p-3 bg-neutral-bg/30 border-t border-neutral-border flex flex-wrap gap-2 mt-auto">
           <button 
               onClick={handleToggleComplete}
               className={cn(
-                "py-2 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center justify-center gap-1.5 w-full",
+                "py-2 px-3 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center justify-center gap-1.5 flex-1 min-w-[80px]",
                 completed ? "text-success-text bg-success-bg/30" : "text-brand-primary bg-brand-primary/10 hover:bg-brand-primary hover:text-white"
               )}
             >
               {completed ? <CheckCircle2 size={12} /> : <Circle size={12} />}
               {completed ? "Finished" : "Done"}
           </button>
+          
+          <button 
+              onClick={handleTestReminder}
+              className="py-2 px-3 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center justify-center gap-1.5 flex-1 min-w-[80px] text-brand-primary bg-brand-primary/10 hover:bg-brand-primary hover:text-white"
+            >
+              <BellRing size={12} />
+              Test Email
+          </button>
+
           <button 
               onClick={(e) => { e.stopPropagation(); onDelete?.(document._id); }}
-              className="py-2 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center justify-center gap-1.5 w-full text-danger-text bg-danger-bg/10 hover:bg-danger-text hover:text-white"
+              className="py-2 px-3 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center justify-center gap-1.5 flex-1 min-w-[80px] text-danger-text bg-danger-bg/10 hover:bg-danger-text hover:text-white"
             >
               <Trash2 size={12} />
               Delete

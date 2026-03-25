@@ -3,6 +3,9 @@ const router = express.Router();
 const taskController = require('../controllers/taskController');
 const { protect } = require('../middleware/authMiddleware');
 
+// Test task reminder
+router.post('/:id/test-reminder', protect, taskController.testTaskReminder);
+
 // All task routes are protected
 router.post('/', protect, taskController.createTask);
 router.get('/', protect, taskController.getTasks);
