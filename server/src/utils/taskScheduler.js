@@ -17,29 +17,23 @@ const startTaskScheduler = () => {
       const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
                           now.getMinutes().toString().padStart(2, '0');
 
-      // Find tasks due today (or earlier) that haven't been notified yet
-      const tasks = await Task.find({
-        completed: false,
-        reminderSent: false,
-        dueDate: { $lte: now } // Simple check for date
-      });
+// Find tasks that have an absolute reminder time reached, but haven't been notified yet
+const tasks = await Task.find({
+  completed: false,
+  reminderSent: false,
+  reminderAt: { $lte: new Date() }
+});
 
-      for (const task of tasks) {
-        // Only fire if the time has passed today, or if the due date was in the past
-        const isPastDay = new Date(task.dueDate) < currentDay;
-        const isExactTime = task.dueTime <= currentTime;
-
-        if (isPastDay || isExactTime) {
-          const user = await User.findById(task.userId);
-          if (user) {
-            console.log(`[Task Scheduler] Firing precision reminder: "${task.title}" for ${user.email} at ${currentTime}`);
-            await sendTaskEmail(user.email, task, user.name);
-            
-            task.reminderSent = true;
-            await task.save();
-          }
-        }
-      }
+for (const task of tasks) {
+  const user = await User.findById(task.userId);
+  if (user) {
+    console.log(`[Task Scheduler] Firing precision reminder: "${task.title}" for ${user.email} (Scheduled: ${task.reminderAt})`);
+    await sendTaskEmail(user.email, task, user.name);
+    
+    task.reminderSent = true;
+    await task.save();
+  }
+}
     } catch (error) {
       console.error('[Task Scheduler Error]:', error.message);
     }

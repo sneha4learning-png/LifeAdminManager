@@ -96,8 +96,13 @@ const Tasks = () => {
       }
     }
 
+    // Construct absolute UTC reminder date for backend scheduler
+    const reminderDate = new Date(newTask.dueDate);
+    const [hours, mins] = newTask.dueTime.split(':');
+    reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+
     try {
-      const res = await axios.post('/api/tasks', newTask);
+      const res = await axios.post('/api/tasks', { ...newTask, reminderAt: reminderDate.toISOString() });
       setTasks([...tasks, res.data]);
       setShowAddModal(false);
       setNewTask({ 
@@ -301,7 +306,7 @@ const Tasks = () => {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-neutral-primary/40 backdrop-blur-sm" onClick={() => setShowAddModal(false)} />
+          <div className="absolute inset-0 bg-neutral-primary/40 backdrop-blur-sm" />
           <div className="bg-neutral-card w-full max-w-md rounded-2xl shadow-soft-xl relative z-10 overflow-hidden border border-neutral-border animate-in slide-in-from-bottom-8 duration-500">
             <div className="p-6 border-b border-neutral-border flex items-center justify-between">
               <h3 className="font-bold text-neutral-primary">Create New Reminder</h3>
@@ -344,19 +349,7 @@ const Tasks = () => {
                     required
                     className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
                     value={newTask.dueTime}
-                    onChange={e => {
-                      const pickedTime = e.target.value;
-                      const todayStr = new Date().toISOString().split('T')[0];
-                      if (newTask.dueDate === todayStr) {
-                         const nowTime = new Date().toTimeString().slice(0, 5);
-                         if (pickedTime < nowTime) {
-                            alert("You cannot schedule a reminder for the past! Setting it to the current time.");
-                            setNewTask({...newTask, dueTime: nowTime});
-                            return;
-                         }
-                      }
-                      setNewTask({...newTask, dueTime: pickedTime});
-                    }}
+                    onChange={e => setNewTask({...newTask, dueTime: e.target.value})}
                   />
                 </div>
               </div>
