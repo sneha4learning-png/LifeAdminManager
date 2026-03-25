@@ -72,12 +72,12 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
             <button 
               onClick={handleToggleComplete}
               className={cn(
-                "p-1.5 rounded-md transition-colors shadow-soft-md",
-                completed ? "text-success-text bg-success-bg/20" : "text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card"
+                "p-1.5 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center gap-1.5",
+                completed ? "text-success-text bg-success-bg/30" : "text-brand-primary bg-brand-primary/10 hover:bg-brand-primary hover:text-white"
               )}
-              title={completed ? "Mark as Pending" : "Mark as Done"}
             >
-              {completed ? <CheckCircle2 size={14} /> : <Circle size={14} />}
+              {completed ? <CheckCircle2 size={12} /> : <Circle size={12} />}
+              {completed ? "Finished" : "Done"}
             </button>
             <button 
               onClick={handleTestReminder}

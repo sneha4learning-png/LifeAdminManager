@@ -163,9 +163,10 @@ const Tasks = () => {
             <button 
               onClick={() => handleToggle(task._id)}
               className={cn(
-                "shrink-0 transition-all transform hover:scale-110",
+                "shrink-0 transition-all transform hover:scale-110 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5",
                 task.completed ? "text-success-text" : "text-neutral-secondary/50 hover:text-brand-primary"
               )}
+              title={task.completed ? "Mark as Pending" : "Mark as Done"}
             >
               {task.completed ? <CheckCircle2 size={24} fill="currentColor" className="text-white" /> : <Circle size={24} />}
             </button>
@@ -195,7 +196,16 @@ const Tasks = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-2 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+              <button 
+                onClick={() => handleToggle(task._id)}
+                className={cn(
+                  "p-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                  task.completed ? "bg-success-bg/20 text-success-text" : "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white"
+                )}
+              >
+                {task.completed ? "Undo" : "Complete"}
+              </button>
               <button 
                 onClick={() => handleDelete(task._id)}
                 className="p-2 text-neutral-secondary hover:text-danger-text transition-colors"

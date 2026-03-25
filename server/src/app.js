@@ -18,7 +18,10 @@ app.get('/health', (req, res) => {
 
 // Database connection
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000, // Fail after 5s if DB unreachable
+    connectTimeoutMS: 10000,       // Fail connection if handshakes take >10s
+})
     .then(() => console.log('[Life Admin Manager] MongoDB connection successful.'))
     .catch((err) => console.error('[Life Admin Manager] MongoDB connection failed:', err.message));
 
