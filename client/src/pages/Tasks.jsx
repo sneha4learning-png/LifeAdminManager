@@ -39,7 +39,17 @@ const Tasks = () => {
     if (location.search.includes('new=true')) {
       setShowAddModal(true);
     }
-  }, [location]);
+    
+    // Set default time to current time when modal opens
+    if (showAddModal) {
+      const now = new Date();
+      setNewTask(prev => ({
+        ...prev,
+        dueDate: now.toISOString().split('T')[0],
+        dueTime: now.toTimeString().slice(0, 5)
+      }));
+    }
+  }, [location, showAddModal]);
 
   const fetchTasks = async () => {
     try {
@@ -330,10 +340,21 @@ const Tasks = () => {
                   <input 
                     type="time" 
                     required
-                    min={newTask.dueDate === new Date().toISOString().split('T')[0] ? new Date().toTimeString().slice(0, 5) : undefined}
                     className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
                     value={newTask.dueTime}
-                    onChange={e => setNewTask({...newTask, dueTime: e.target.value})}
+                    onChange={e => {
+                      const pickedTime = e.target.value;
+                      const todayStr = new Date().toISOString().split('T')[0];
+                      if (newTask.dueDate === todayStr) {
+                         const nowTime = new Date().toTimeString().slice(0, 5);
+                         if (pickedTime < nowTime) {
+                            alert("You cannot schedule a reminder for the past! Setting it to the current time.");
+                            setNewTask({...newTask, dueTime: nowTime});
+                            return;
+                         }
+                      }
+                      setNewTask({...newTask, dueTime: pickedTime});
+                    }}
                   />
                 </div>
               </div>
