@@ -34,27 +34,24 @@ const Tasks = () => {
     category: 'General'
   });
 
-  const [prevShowAddModal, setPrevShowAddModal] = useState(false);
-
   useEffect(() => {
     fetchTasks();
     if (location.search.includes('new=true')) {
-      setShowAddModal(true);
+      openAddModal();
     }
   }, [location]);
 
-  // Set default time ONLY when the modal is first opened
-  useEffect(() => {
-    if (showAddModal && !prevShowAddModal) {
-      const now = new Date();
-      setNewTask(prev => ({
-        ...prev,
-        dueDate: now.toISOString().split('T')[0],
-        dueTime: now.toTimeString().slice(0, 5)
-      }));
-    }
-    setPrevShowAddModal(showAddModal);
-  }, [showAddModal]);
+  const openAddModal = () => {
+    const now = new Date();
+    setNewTask({
+      title: '',
+      dueDate: now.toISOString().split('T')[0],
+      dueTime: now.toTimeString().slice(0, 5),
+      priority: 'Medium',
+      category: 'General'
+    });
+    setShowAddModal(true);
+  };
 
   const fetchTasks = async () => {
     try {
@@ -145,7 +142,7 @@ const Tasks = () => {
           <p className="text-sm text-neutral-secondary mt-1">Manage your daily tasks and life events securely.</p>
         </div>
         <button 
-          onClick={() => setShowAddModal(true)}
+          onClick={openAddModal}
           className="btn btn-primary gap-2 shadow-soft-lg group"
         >
           <Plus size={20} className="group-hover:rotate-90 transition-transform" />
@@ -292,7 +289,7 @@ const Tasks = () => {
                 <p className="text-sm text-neutral-secondary mt-1 max-w-xs mx-auto">Click "New Reminder" to start tracking your daily tasks and life events.</p>
              </div>
              <button 
-              onClick={() => setShowAddModal(true)}
+              onClick={openAddModal}
               className="btn btn-primary btn-sm px-6"
              >
                 Add Your First Task
