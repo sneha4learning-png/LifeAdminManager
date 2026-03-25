@@ -8,7 +8,6 @@ import {
   Menu, 
   X, 
   Bell, 
-  User,
   History,
   LayoutDashboard,
   Moon,
