@@ -46,17 +46,18 @@ const Layout = ({ children }) => {
   ];
 
   return (
-    <div className="flex h-screen bg-neutral-bg overflow-hidden font-sans transition-colors duration-200">
+    <div className="flex h-screen bg-dual-theme overflow-hidden font-sans transition-colors duration-200">
+      <div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand-primary to-brand-accent z-[100]" />
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-neutral-card border-r border-neutral-border z-20 transition-colors duration-200">
+      <aside className="hidden lg:flex flex-col w-64 sidebar-premium z-20 transition-colors duration-200">
         <div className="p-6">
            <Link to="/dashboard" className="hover:opacity-80 transition-opacity">
-              <Logo className="scale-90 origin-left" />
+              <Logo className="scale-90 origin-left" light={true} />
            </Link>
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
-          <p className="px-4 text-[10px] font-bold text-neutral-secondary uppercase tracking-widest mb-4">Main Menu</p>
+          <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 opacity-50">Main Menu</p>
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -64,35 +65,36 @@ const Layout = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 group relative",
+                  "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300 group relative",
                   isActive 
-                    ? "bg-brand-primary text-white shadow-soft-md" 
-                    : "text-neutral-secondary hover:text-neutral-primary hover:bg-black/5 dark:hover:bg-white/5"
+                    ? "nav-item-active-dual" 
+                    : "text-slate-400 hover:text-white hover:bg-white/5 shadow-none"
                 )}
               >
-                <item.icon size={18} className={cn("transition-transform", isActive ? "stroke-[2px]" : "stroke-[1.5px]")} />
-                <span className="text-sm font-medium">{item.name}</span>
+                <item.icon size={18} className={cn("transition-transform", isActive ? "stroke-[2.5px]" : "stroke-[1.5px] opacity-70 group-hover:opacity-100")} />
+                <span className={cn("text-sm font-semibold", !isActive && "tracking-wide")}>{item.name}</span>
+                {isActive && <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]" />}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-neutral-border space-y-4">
-           <div className="flex items-center gap-3 px-3 py-3 bg-neutral-bg rounded-lg border border-neutral-border">
-              <div className="w-8 h-8 rounded-lg bg-brand-primary flex items-center justify-center text-white font-bold text-xs shrink-0 capitalize">
+        <div className="p-4 border-t border-white/5 space-y-4">
+           <div className="flex items-center gap-3 px-3 py-3 bg-white/5 rounded-xl border border-white/5 backdrop-blur-sm">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-white font-bold text-xs shrink-0 capitalize">
                 {user.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-neutral-primary truncate capitalize">{user.name}</p>
-                <p className="text-[10px] font-medium text-neutral-secondary truncate">{user.role}</p>
+                <p className="text-xs font-bold text-white truncate capitalize">{user.name}</p>
+                <p className="text-[10px] font-medium text-slate-400 truncate opacity-70">{user.role}</p>
               </div>
            </div>
            <button 
              onClick={handleLogout}
-             className="flex items-center gap-3 w-full px-4 py-2 text-neutral-secondary font-medium text-sm hover:text-danger-text transition-all"
+             className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-400 font-bold text-[11px] uppercase tracking-widest hover:text-danger-text transition-all group"
            >
-             <LogOut size={16} />
-             <span>Sign Out</span>
+             <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
+             <span>Sign Out Vault</span>
            </button>
         </div>
       </aside>
@@ -100,7 +102,7 @@ const Layout = ({ children }) => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-neutral-card border-b border-neutral-border flex items-center justify-between px-6 sticky top-0 z-30 shrink-0 transition-colors duration-200">
+        <header className="h-16 header-dual flex items-center justify-between px-6 sticky top-0 z-30 shrink-0 transition-colors duration-200">
           <div className="flex items-center gap-4 min-w-0">
              <button 
                onClick={() => setIsMobileMenuOpen(true)}
@@ -144,12 +146,12 @@ const Layout = ({ children }) => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="fixed inset-y-0 left-0 w-64 bg-neutral-card shadow-soft-lg flex flex-col">
-            <div className="p-6 flex items-center justify-between border-b border-neutral-border">
+          <div className="fixed inset-y-0 left-0 w-64 sidebar-premium shadow-soft-xl flex flex-col">
+            <div className="p-6 flex items-center justify-between border-b border-white/5">
               <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                <Logo className="scale-75 origin-left" />
+                <Logo className="scale-75 origin-left" light={true} />
               </Link>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="text-neutral-secondary p-2"><X size={24} /></button>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 p-2"><X size={24} /></button>
             </div>
             <nav className="flex-1 p-4 space-y-1">
               {navItems.map((item) => (
@@ -158,10 +160,10 @@ const Layout = ({ children }) => {
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-semibold transition-all",
                     location.pathname === item.path 
-                      ? "bg-brand-primary text-white" 
-                      : "text-neutral-secondary hover:bg-black/5 dark:hover:bg-white/5 hover:text-neutral-primary"
+                      ? "nav-item-active-dual" 
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
                   )}
                 >
                   <item.icon size={20} />

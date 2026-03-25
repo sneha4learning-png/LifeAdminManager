@@ -94,11 +94,37 @@
   background-color: rgba(148, 163, 184, 0.2);
 }
 
-/* Glass effect utilities */
-.glass {
-  background-color: var(--neutral-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  @apply border-b border-neutral-border opacity-70;
+/* Dual Color Theme Utilities */
+.bg-dual-theme {
+  @apply bg-neutral-bg;
+  background-image: radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.05) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%);
+}
+
+.dark .bg-dual-theme {
+  background-image: radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
+}
+
+.sidebar-premium {
+  @apply bg-[#0F172A] border-r border-white/5;
+}
+
+.sidebar-premium .text-neutral-secondary {
+  @apply text-slate-400;
+}
+
+.sidebar-premium .text-neutral-primary {
+  @apply text-white;
+}
+
+.nav-item-active-dual {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+  @apply text-white shadow-lg shadow-brand-primary/20;
+}
+
+.header-dual {
+  @apply bg-neutral-card/80 backdrop-blur-md border-b border-neutral-border;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
 }
 
