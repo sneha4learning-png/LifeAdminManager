@@ -79,10 +79,16 @@ const Dashboard = () => {
           <h1 className="heading-xl">Welcome back, <span className="text-brand-primary capitalize">{JSON.parse(localStorage.getItem('user'))?.name || 'User'}</span></h1>
           <p className="text-sm text-neutral-secondary mt-1">Easily manage your documents and reminders in one place.</p>
         </div>
-        <Link to="/add-document" className="btn btn-primary gap-2">
-          <PlusCircle size={18} />
-          Add Document
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/tasks/new" className="btn bg-success-bg text-success-text hover:bg-success-text hover:text-white border-success-text/20 gap-2">
+            <PlusCircle size={18} />
+            Add Reminder
+          </Link>
+          <Link to="/add-document" className="btn btn-primary gap-2">
+            <PlusCircle size={18} />
+            Add Document
+          </Link>
+        </div>
       </div>
 
       {/* Stats Grid */}

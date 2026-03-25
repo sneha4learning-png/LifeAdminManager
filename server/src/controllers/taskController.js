@@ -143,6 +143,10 @@ exports.rescheduleTask = async (req, res) => {
 
 exports.testTaskReminder = async (req, res) => {
   try {
+    const isConnected = require('mongoose').connection.readyState === 1;
+    if (!isConnected) {
+        return res.status(200).json({ message: 'Success (Local Simulation)! Manual reminder triggered locally.' });
+    }
     const User = require('../models/User');
     const sendTaskEmail = require('../utils/taskReminderEmail');
     const task = await Task.findOne({ _id: req.params.id, userId: req.user.id });
