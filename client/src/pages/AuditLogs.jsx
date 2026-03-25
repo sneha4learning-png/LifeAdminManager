@@ -54,7 +54,7 @@ const AuditLogs = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-border">
         <div>
-          <h1 className="heading-xl">Activity <span className="text-brand-primary">History</span></h1>
+          <h1 className="heading-xl">Activity <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">History</span></h1>
           <p className="text-sm text-neutral-secondary mt-1">A complete record of all actions taken in your account.</p>
         </div>
         <button 
@@ -75,7 +75,7 @@ const AuditLogs = () => {
            </span>
         </div>
 
-        <div className="divide-y divide-neutral-border">
+        <div className="max-h-[600px] overflow-y-auto divide-y divide-neutral-border scrollbar-thin scrollbar-thumb-neutral-secondary/20 hover:scrollbar-thumb-neutral-secondary/40">
           {logs.length > 0 ? logs.map((log) => (
             <div key={log._id} className="p-4 sm:p-6 hover:bg-neutral-bg/30 transition-colors flex gap-4">
                <div className="shrink-0 flex flex-col items-center">
