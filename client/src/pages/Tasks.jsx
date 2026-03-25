@@ -220,7 +220,13 @@ const Tasks = () => {
                 </span>
                 <span className="flex items-center gap-1 text-[10px] font-bold text-neutral-secondary uppercase tracking-widest">
                   <Clock size={12} />
-                  {task.dueTime}
+                  {(() => {
+                    const [h, m] = task.dueTime.split(':');
+                    const hour = parseInt(h);
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const h12 = hour % 12 || 12;
+                    return `${h12}:${m} ${ampm}`;
+                  })()}
                 </span>
                 <span className="flex items-center gap-1 text-[10px] font-bold text-neutral-secondary uppercase tracking-widest">
                   <Tag size={12} />

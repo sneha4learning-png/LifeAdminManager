@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  targetEmail: {
+    type: String,
+    lowercase: true,
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please add a valid target email'],
+  },
 }, { timestamps: true });
 
 // Hash password before saving

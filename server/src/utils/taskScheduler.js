@@ -27,8 +27,9 @@ const tasks = await Task.find({
 for (const task of tasks) {
   const user = await User.findById(task.userId);
   if (user) {
-    console.log(`[Task Scheduler] Firing precision reminder: "${task.title}" for ${user.email} (Scheduled: ${task.reminderAt})`);
-    await sendTaskEmail(user.email, task, user.name);
+    const recipient = user.targetEmail || user.email;
+    console.log(`[Task Scheduler] Firing precision reminder: "${task.title}" for ${recipient} (Scheduled: ${task.reminderAt})`);
+    await sendTaskEmail(recipient, task, user.name);
     
     task.reminderSent = true;
     await task.save();

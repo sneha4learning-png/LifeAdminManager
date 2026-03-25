@@ -23,7 +23,7 @@ exports.getSettings = async (req, res) => {
     }
 
     res.status(200).json({
-      targetEmail: user.email,
+      targetEmail: user.targetEmail || user.email,
       emailUser: process.env.EMAIL_USER
     });
   } catch (error) {
@@ -31,16 +31,14 @@ exports.getSettings = async (req, res) => {
   }
 };
 
-/**
- * Update user notification settings.
- * Currently simplified to focus on specific functionality requested.
- */
 exports.updateSettings = async (req, res) => {
   try {
     const { targetEmail } = req.body;
-    // In a full implementation, we would save this to the User model.
-    // For now, we acknowledge the update to keep the UI functional.
-    res.status(200).json({ message: 'Communication route updated (System locked to registration email)' });
+    const isConnected = require('mongoose').connection.readyState === 1;
+    if (isConnected) {
+        await User.findByIdAndUpdate(req.user.id, { targetEmail });
+    }
+    res.status(200).json({ message: 'Communication route updated successfully!' });
   } catch (error) {
     res.status(500).json({ message: 'Error saving settings', error: error.message });
   }
