@@ -19,6 +19,10 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  dueTime: {
+    type: String,
+    default: '09:00' // Default to 9 AM
+  },
   priority: {
     type: String,
     enum: ['Low', 'Medium', 'High'],

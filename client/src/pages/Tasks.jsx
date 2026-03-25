@@ -28,7 +28,8 @@ const Tasks = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
-    dueDate: '',
+    dueDate: new Date().toISOString().split('T')[0],
+    dueTime: '09:00',
     priority: 'Medium',
     category: 'General'
   });
@@ -184,6 +185,10 @@ const Tasks = () => {
                   {new Date(task.dueDate).toLocaleDateString()}
                 </span>
                 <span className="flex items-center gap-1 text-[10px] font-bold text-neutral-secondary uppercase tracking-widest">
+                  <Clock size={12} />
+                  {task.dueTime}
+                </span>
+                <span className="flex items-center gap-1 text-[10px] font-bold text-neutral-secondary uppercase tracking-widest">
                   <Tag size={12} />
                   {task.category}
                 </span>
@@ -211,6 +216,22 @@ const Tasks = () => {
               >
                 Test Email
               </button>
+              <div className="flex items-center gap-1 border-x border-neutral-border px-1">
+                <button 
+                  onClick={() => axios.get(`/api/tasks/${task._id}/reschedule/1`).then(() => fetchTasks())}
+                  className="px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all text-neutral-secondary hover:text-brand-primary"
+                  title="Forward by 1 day"
+                >
+                  +1d
+                </button>
+                <button 
+                  onClick={() => axios.get(`/api/tasks/${task._id}/reschedule/7`).then(() => fetchTasks())}
+                  className="px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all text-neutral-secondary hover:text-brand-primary"
+                  title="Forward by 1 week"
+                >
+                  +7d
+                </button>
+              </div>
               <button 
                 onClick={() => handleToggle(task._id)}
                 className={cn(
@@ -284,17 +305,28 @@ const Tasks = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Priority</label>
-                  <select 
-                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-bold"
-                    value={newTask.priority}
-                    onChange={e => setNewTask({...newTask, priority: e.target.value})}
-                  >
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                  </select>
+                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Reminder Time</label>
+                  <input 
+                    type="time" 
+                    required
+                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
+                    value={newTask.dueTime}
+                    onChange={e => setNewTask({...newTask, dueTime: e.target.value})}
+                  />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Priority</label>
+                <select 
+                  className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-bold"
+                  value={newTask.priority}
+                  onChange={e => setNewTask({...newTask, priority: e.target.value})}
+                >
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
               </div>
 
               <div className="space-y-2">

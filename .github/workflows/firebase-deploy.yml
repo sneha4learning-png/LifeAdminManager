@@ -1,4 +1,4 @@
-name: Firebase Deploy CI/CD
+name: Unified Vault Deploy (Firebase + Render)
 
 on:
   push:
@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install dependencies (Client)
         run: |
           cd client
@@ -19,22 +24,28 @@ jobs:
 
       - name: Build (Client)
         env:
+          # Crucial: This link ensures the frontend knows where the Render backend is
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: |
           cd client
           npm run build
 
-      - name: Install dependencies (Server)
-        run: |
-          cd server
-          npm install
-
-      - name: Deploy to Firebase
+      - name: Deploy Frontend to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}'
           channelId: live
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      - name: Trigger Backend Deploy (Render)
+        if: success()
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "🚀 Triggering Render Deploy Hook..."
+            curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          else
+            echo "⚠️ Skipping Render trigger - RENDER_DEPLOY_HOOK secret not found."
+          fi
 
 
