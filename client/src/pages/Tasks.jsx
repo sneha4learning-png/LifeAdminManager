@@ -196,11 +196,11 @@ const Tasks = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 transition-opacity">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
               <button 
                 onClick={() => handleToggle(task._id)}
                 className={cn(
-                  "p-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                  "px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all",
                   task.completed ? "bg-success-bg/20 text-success-text" : "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white"
                 )}
               >
@@ -208,10 +208,10 @@ const Tasks = () => {
               </button>
               <button 
                 onClick={() => handleDelete(task._id)}
-                className="p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-colors shrink-0"
                 title="Delete"
               >
-                <Trash2 size={16} />
+                <Trash2 size={14} className="sm:size-[16px]" />
               </button>
             </div>
           </div>
