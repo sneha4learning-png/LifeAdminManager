@@ -12,7 +12,9 @@ import {
   LayoutDashboard,
   Moon,
   Sun,
-  CheckCircle2
+  CheckCircle2,
+  Calendar,
+  Activity
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';

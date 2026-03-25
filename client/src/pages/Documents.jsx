@@ -12,7 +12,8 @@ import {
   Edit,
   Pencil,
   CheckCircle2,
-  Calendar
+  Calendar,
+  Activity
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
