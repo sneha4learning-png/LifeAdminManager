@@ -68,7 +68,7 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
             <styles.icon size={12} className="transition-transform group-hover:scale-110 duration-300" />
             {completed ? 'COMPLETED' : status}
           </div>
-          <div className="flex items-center gap-1 opacity-100 transition-opacity">
+          <div className="flex items-center gap-2">
             <button 
               onClick={handleToggleComplete}
               className={cn(
@@ -80,26 +80,28 @@ const DocumentCard = ({ document, onEdit, onDelete, onRefresh }) => {
               {completed ? "Finished" : "Done"}
             </button>
             <button 
-              onClick={handleTestReminder}
-              className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors shadow-soft-md"
-              title="Test Email Reminder"
-            >
-              <BellRing size={14} />
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); onEdit?.(document); }}
-              className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors shadow-soft-md"
-              title="Edit"
-            >
-              <Edit2 size={14} />
-            </button>
-            <button 
               onClick={(e) => { e.stopPropagation(); onDelete?.(document._id); }}
-              className="p-1.5 text-neutral-secondary hover:text-danger-text hover:bg-neutral-card rounded-md transition-colors shadow-soft-md"
-              title="Delete"
+              className="p-1.5 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-soft-sm flex items-center gap-1.5 text-danger-text bg-danger-bg/20 hover:bg-danger-text hover:text-white"
             >
-              <Trash2 size={14} />
+              <Trash2 size={12} />
+              Delete
             </button>
+            <div className="flex items-center gap-1 ml-1 border-l border-neutral-border pl-2">
+              <button 
+                onClick={handleTestReminder}
+                className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors"
+                title="Test Email Reminder"
+              >
+                <BellRing size={14} />
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEdit?.(document); }}
+                className="p-1.5 text-neutral-secondary hover:text-brand-primary hover:bg-neutral-card rounded-md transition-colors"
+                title="Edit"
+              >
+                <Edit2 size={14} />
+              </button>
+            </div>
           </div>
        </div>
 

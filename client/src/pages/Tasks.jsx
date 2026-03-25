@@ -196,7 +196,7 @@ const Tasks = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-2 transition-opacity">
               <button 
                 onClick={() => handleToggle(task._id)}
                 className={cn(
@@ -208,7 +208,7 @@ const Tasks = () => {
               </button>
               <button 
                 onClick={() => handleDelete(task._id)}
-                className="p-2 text-neutral-secondary hover:text-danger-text transition-colors"
+                className="p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-colors"
                 title="Delete"
               >
                 <Trash2 size={16} />
