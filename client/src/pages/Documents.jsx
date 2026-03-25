@@ -13,7 +13,9 @@ import {
   ChevronRight,
   ArrowRight,
   Activity,
-  Trash2
+  Trash2,
+  Edit,
+  Pencil
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -28,6 +30,8 @@ const Documents = () => {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
   const [view, setView] = useState('grid');
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     fetchDocs();
@@ -41,6 +45,27 @@ const Documents = () => {
       console.error('Failed to fetch docs', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEditDoc = (doc) => {
+    setEditingDoc({
+      ...doc,
+      expiryDate: new Date(doc.expiryDate).toISOString().split('T')[0]
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateDoc = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(`/api/documents/${editingDoc._id}`, editingDoc);
+      setDocuments(documents.map(d => d._id === editingDoc._id ? res.data : d));
+      setShowEditModal(false);
+      setEditingDoc(null);
+    } catch (err) {
+      console.error('Update failed:', err);
+      alert('Update Error: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -162,32 +187,36 @@ const Documents = () => {
         )}>
           {filteredDocs.map(doc => (
             view === 'grid' ? (
-              <DocumentCard key={doc._id} document={doc} onDelete={handleDelete} onEdit={() => {}} onRefresh={fetchDocs} />
+              <DocumentCard key={doc._id} document={doc} onDelete={handleDelete} onEdit={() => handleEditDoc(doc)} onRefresh={fetchDocs} />
             ) : (
               <div key={doc._id} className={cn("card p-4 flex items-center justify-between group", doc.completed && "opacity-60")}>
                  <div className="flex items-center gap-6 min-w-0 flex-1">
                     <div className={cn(
-                       "w-12 h-12 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs",
-                       doc.completed ? "bg-success-bg text-brand-primary" : (doc.status === 'Overdue' ? 'bg-danger-bg text-danger-text' : (doc.status === 'Upcoming' ? 'bg-warning-bg text-warning-text' : 'bg-success-bg text-success-text'))
+                       "w-12 h-12 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs shadow-soft-sm",
+                       doc.completed ? "bg-success-bg text-brand-primary" : (doc.status === 'Overdue' ? 'bg-danger-bg text-danger-text border border-danger-text/10' : (doc.status === 'Upcoming' ? 'bg-warning-bg text-warning-text border border-warning-text/10' : 'bg-success-bg text-success-text border border-success-text/10'))
                     )}>
-                       {doc.completed ? <CheckCircle2 size={24} /> : doc.category.slice(0,3)}
+                       {doc.completed ? <CheckCircle2 size={24} /> : doc.category.slice(0,3).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                        <h4 className="text-sm font-bold text-neutral-primary group-hover:text-brand-primary transition-colors truncate">{doc.name}</h4>
-                       <p className="text-xs text-neutral-secondary mt-0.5">Expires {new Date(doc.expiryDate).toLocaleDateString()}</p>
+                       <p className="text-[10px] font-bold text-neutral-secondary mt-0.5 uppercase tracking-widest flex items-center gap-2">
+                         <Calendar size={10} />
+                         Expires {new Date(doc.expiryDate).toLocaleDateString()}
+                       </p>
                     </div>
                  </div>
                  <div className="flex items-center gap-4 ml-6">
-                    <div className="flex flex-col items-end whitespace-nowrap hidden sm:block">
+                    <div className="flex flex-col items-end whitespace-nowrap hidden md:block">
                        <p className={cn(
-                          "text-xs font-bold uppercase tracking-wider",
+                          "text-[10px] font-black uppercase tracking-widest",
                           doc.status === 'Overdue' ? 'text-danger-text' : (doc.status === 'Upcoming' ? 'text-warning-text' : 'text-success-text')
                        )}>{doc.status}</p>
-                       <p className="text-[10px] text-neutral-secondary">Document Status</p>
+                       <p className="text-[9px] font-bold text-neutral-secondary uppercase tracking-tighter">Document Status</p>
                     </div>
-                    <div className="flex items-center gap-2 opacity-100 transition-all">
-                       <button onClick={() => handleDelete(doc._id)} className="p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-all" title="Delete"><Trash2 size={18} /></button>
-                       <ChevronRight size={18} className="text-neutral-secondary group-hover:text-brand-primary" />
+                    <div className="flex items-center gap-1">
+                       <button onClick={() => handleEditDoc(doc)} className="p-2 text-neutral-secondary hover:text-brand-primary hover:bg-brand-primary/10 rounded-lg transition-all" title="Edit"><Pencil size={16} /></button>
+                       <button onClick={() => handleDelete(doc._id)} className="p-2 text-neutral-secondary hover:text-danger-text hover:bg-danger-bg rounded-lg transition-all" title="Delete"><Trash2 size={16} /></button>
+                       <ChevronRight size={18} className="text-neutral-secondary group-hover:text-brand-primary ml-1" />
                     </div>
                  </div>
               </div>
@@ -209,6 +238,76 @@ const Documents = () => {
           >
             Clear Filters <ArrowRight size={14} />
           </button>
+        </div>
+      )}
+      {/* Edit Modal */}
+      {showEditModal && editingDoc && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-neutral-primary/40 backdrop-blur-sm" onClick={() => setShowEditModal(false)} />
+          <div className="bg-neutral-card w-full max-w-md rounded-2xl shadow-soft-xl relative z-10 overflow-hidden border border-neutral-border animate-in slide-in-from-bottom-8 duration-500">
+            <div className="p-6 border-b border-neutral-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Edit className="text-brand-primary" size={20} />
+                <h3 className="font-bold text-neutral-primary">Modify Document</h3>
+              </div>
+              <button onClick={() => setShowEditModal(false)} className="text-[10px] font-bold text-neutral-secondary hover:text-neutral-primary uppercase tracking-widest">Close</button>
+            </div>
+            
+            <form onSubmit={handleUpdateDoc} className="p-6 space-y-5">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Document Name</label>
+                <input 
+                  autoFocus required type="text" 
+                  className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-sm font-medium"
+                  value={editingDoc.name}
+                  onChange={e => setEditingDoc({...editingDoc, name: e.target.value})}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Category</label>
+                  <select 
+                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-bold"
+                    value={editingDoc.category}
+                    onChange={e => setEditingDoc({...editingDoc, category: e.target.value})}
+                  >
+                    {categories.filter(c => c !== 'All' && c !== 'Completed').map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Expiry Date</label>
+                  <input 
+                    type="date" required
+                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
+                    value={editingDoc.expiryDate}
+                    onChange={e => setEditingDoc({...editingDoc, expiryDate: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Reminder (Days Before)</label>
+                <input 
+                  type="number" required min="1" max="365"
+                  className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-sm font-medium"
+                  value={editingDoc.reminderDaysBefore}
+                  onChange={e => setEditingDoc({...editingDoc, reminderDaysBefore: e.target.value})}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setShowEditModal(false)} className="flex-1 px-4 py-3 rounded-xl border border-neutral-border text-[10px] font-bold text-neutral-secondary uppercase tracking-widest hover:bg-neutral-bg transition-all">
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary flex-1 py-3.5 shadow-soft-md font-bold uppercase tracking-widest text-[10px]">
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

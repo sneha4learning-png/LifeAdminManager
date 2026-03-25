@@ -13,7 +13,9 @@ import {
   Filter,
   CheckCircle,
   MoreVertical,
-  Activity
+  Activity,
+  Edit,
+  Pencil
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -26,6 +28,8 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, pending, completed
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
   const [newTask, setNewTask] = useState({
     title: '',
     dueDate: new Date().toISOString().split('T')[0],
@@ -86,16 +90,6 @@ const Tasks = () => {
   const handleAddTask = async (e) => {
     e.preventDefault();
     
-    // Validation: Prevent past times for today's date
-    const todayStr = new Date().toISOString().split('T')[0];
-    if (newTask.dueDate === todayStr) {
-      const currentTime = new Date().toTimeString().slice(0, 5);
-      if (newTask.dueTime < currentTime) {
-        alert("The selected time has already passed for today. Please pick a future time.");
-        return;
-      }
-    }
-
     // Construct absolute UTC reminder date for backend scheduler
     try {
       if (!newTask.dueDate || !newTask.dueTime) throw new Error("Please select both a date and a time.");
@@ -104,11 +98,6 @@ const Tasks = () => {
       const [hours, mins] = newTask.dueTime.split(':');
       reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
       
-      console.log('--- SAVING TASK ---');
-      console.log('Due Date:', newTask.dueDate);
-      console.log('Due Time:', newTask.dueTime);
-      console.log('Calculated UTC:', reminderDate.toISOString());
-
       const res = await axios.post('/api/tasks', { ...newTask, reminderAt: reminderDate.toISOString() });
       setTasks([...tasks, res.data]);
       setShowAddModal(false);
@@ -123,6 +112,38 @@ const Tasks = () => {
       console.error('Add failed:', err);
       alert('Save Error: ' + (err.response?.data?.message || err.message));
     }
+  };
+
+  const handleUpdateTask = async (e) => {
+    e.preventDefault();
+    try {
+      if (!editingTask.dueDate || !editingTask.dueTime) throw new Error("Please select both a date and a time.");
+      
+      const reminderDate = new Date(editingTask.dueDate);
+      const [hours, mins] = editingTask.dueTime.split(':');
+      reminderDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+
+      const res = await axios.put(`/api/tasks/${editingTask._id}`, { 
+        ...editingTask, 
+        reminderAt: reminderDate.toISOString(),
+        reminderSent: false // Reset to allow the update to fire again if time changed
+      });
+      
+      setTasks(tasks.map(t => t._id === editingTask._id ? res.data : t));
+      setShowEditModal(false);
+      setEditingTask(null);
+    } catch (err) {
+      console.error('Update failed:', err);
+      alert('Update Error: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
+  const handleEditTask = (task) => {
+    setEditingTask({
+      ...task,
+      dueDate: new Date(task.dueDate).toISOString().split('T')[0]
+    });
+    setShowEditModal(true);
   };
 
   const filteredTasks = tasks.filter(t => {
@@ -250,6 +271,13 @@ const Tasks = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end font-sans">
+              <button 
+                onClick={() => handleEditTask(task)}
+                className="p-1.5 sm:p-2 text-neutral-secondary hover:text-brand-primary hover:bg-brand-primary/10 rounded-lg transition-colors"
+                title="Edit Reminder"
+              >
+                <Pencil size={14} className="sm:size-[16px]" />
+              </button>
               <button 
                 onClick={async () => {
                   try {
@@ -395,6 +423,77 @@ const Tasks = () => {
               <button type="submit" className="btn btn-primary w-full py-3.5 mt-4 shadow-soft-md">
                 Save Reminder
               </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showEditModal && editingTask && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-neutral-primary/40 backdrop-blur-sm" onClick={() => setShowEditModal(false)} />
+          <div className="bg-neutral-card w-full max-w-md rounded-2xl shadow-soft-xl relative z-10 overflow-hidden border border-neutral-border animate-in slide-in-from-bottom-8 duration-500">
+            <div className="p-6 border-b border-neutral-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Edit className="text-brand-primary" size={20} />
+                <h3 className="font-bold text-neutral-primary">Modify Reminder</h3>
+              </div>
+              <button onClick={() => setShowEditModal(false)} className="text-[10px] font-bold text-neutral-secondary hover:text-neutral-primary uppercase tracking-widest">Close</button>
+            </div>
+            
+            <form onSubmit={handleUpdateTask} className="p-6 space-y-5">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">What needs doing?</label>
+                <input 
+                  autoFocus required type="text" 
+                  placeholder="Task title..."
+                  className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-sm font-medium"
+                  value={editingTask.title}
+                  onChange={e => setEditingTask({...editingTask, title: e.target.value})}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Due Date</label>
+                  <input 
+                    type="date" required
+                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
+                    value={editingTask.dueDate}
+                    onChange={e => setEditingTask({...editingTask, dueDate: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Time</label>
+                  <input 
+                    type="time" required
+                    className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-medium"
+                    value={editingTask.dueTime}
+                    onChange={e => setEditingTask({...editingTask, dueTime: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-neutral-secondary uppercase tracking-widest ml-1">Priority</label>
+                <select 
+                  className="input-field w-full px-4 py-3 rounded-xl bg-neutral-bg border border-neutral-border outline-none focus:border-brand-primary transition-all text-xs font-bold"
+                  value={editingTask.priority}
+                  onChange={e => setEditingTask({...editingTask, priority: e.target.value})}
+                >
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setShowEditModal(false)} className="flex-1 px-4 py-3 rounded-xl border border-neutral-border text-[10px] font-bold text-neutral-secondary uppercase tracking-widest hover:bg-neutral-bg transition-all">
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary flex-1 py-3.5 shadow-soft-md font-bold uppercase tracking-widest text-[10px]">
+                  Update
+                </button>
+              </div>
             </form>
           </div>
         </div>

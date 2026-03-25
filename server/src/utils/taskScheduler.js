@@ -11,18 +11,27 @@ const startTaskScheduler = () => {
   cron.schedule('* * * * *', async () => {
     try {
       const now = new Date();
-      const currentDay = new Date();
-      currentDay.setHours(0, 0, 0, 0);
-
       const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
                           now.getMinutes().toString().padStart(2, '0');
 
-// Find tasks that have an absolute reminder time reached, but haven't been notified yet
+      // Find tasks that are due but haven't been notified yet
+// Support both new precision (reminderAt) and legacy (dueDate + dueTime)
 const tasks = await Task.find({
   completed: false,
   reminderSent: false,
-  reminderAt: { $lte: new Date() }
+  $or: [
+    { reminderAt: { $lte: now } },
+    { 
+       reminderAt: { $exists: false },
+       dueDate: { $lte: now },
+       dueTime: { $lte: currentTime }
+    }
+  ]
 });
+
+if (tasks.length > 0) {
+  console.log(`[Task Scheduler] Found ${tasks.length} pending reminders...`);
+}
 
 for (const task of tasks) {
   const user = await User.findById(task.userId);
